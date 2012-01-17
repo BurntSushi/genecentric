@@ -46,8 +46,6 @@ def group_genes((i, g1)):
 
     parallel.inc_counter()
     parallel.print_progress()
-    # debug.progress('%d of %d BPMs generated...'  
-                    # % (parallel.get_counter(), emap.genecount())) 
 
     return set(mod1), set(mod2)
 
@@ -123,8 +121,6 @@ def localmaxcut(m):
 
     parallel.inc_counter()
     parallel.print_progress()
-    # debug.progress('%d of %d partitions done...'  
-                    # % (parallel.get_counter(), conf.M)) 
 
     return A, B
 

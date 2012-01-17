@@ -25,6 +25,11 @@ def pmap(*args, **kargs):
         return map(*args, **kargs)
 
 def print_progress():
+    '''
+    This is a nice little progress bar that is reasonably accurate. It isn't
+    perfect but should give a rough idea of how much longer the program needs
+    to run.
+    '''
     if not conf.progress:
         return
 
@@ -44,8 +49,15 @@ def print_progress():
     sys.stdout.flush()
 
 def inc_counter(incby=1):
+    '''
+    Each unit this counter is increased by represents a "step" in the program.
+    It is then used to show a progress bar.
+    '''
     counter.value += incby
 
 def get_counter():
+    '''
+    Simple accessor.
+    '''
     return counter.value
 
