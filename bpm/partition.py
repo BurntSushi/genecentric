@@ -4,15 +4,21 @@ import random
 from bpm import conf, emap, parallel
 from bpm import debug
 
+# See notes in 'bpms' for why this is global.
 happyparts = None
 
 def bpms():
-    global happyparts
-
     '''
     Generates a list of happy bipartitions in parallel and then
     generates a list of BPMs in parallel.
     '''
+
+    # This global variable is bad in principle but seems to be required
+    # for parallelism to be effective with 'group_genes'. I was currying
+    # 'happyparts' with group_genes, but for whatever reason, this stopped
+    # multiprocessing from keeping all of the cores hot.
+    global happyparts
+
     happyparts = parallel.pmap(localmaxcut, xrange(0, conf.M))
     debug.echotime('after generating happy partitions')
     return parallel.pmap(group_genes, 
