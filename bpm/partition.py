@@ -71,8 +71,8 @@ def localmaxcut(m):
     unhappy = get_unhappy(nweights)
 
     while unhappy:
-        # v = random.choice(unhappy) 
-        v = get_most_unhappy(unhappy, nweights)
+        v = random.choice(unhappy)
+        # v = get_most_unhappy(unhappy, nweights) 
 
         if v in A:
             A.remove(v)
