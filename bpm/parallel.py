@@ -29,12 +29,18 @@ def print_progress():
         return
 
     spaces = 60
-    percent = float(counter.value) / float(steps)
-    progress = int(math.ceil(percent * spaces))
-    blanks = spaces - progress
 
-    print '\r[%s%s] %d%%' % ('#' * progress, ' ' * blanks, 
-                             math.ceil(percent * 100)),
+    if counter.value == steps:
+        progress = spaces
+        blanks = 0
+        pnumber = 100
+    else:
+        percent = float(counter.value) / float(steps)
+        progress = int(math.ceil(percent * spaces))
+        blanks = spaces - progress
+        pnumber = math.ceil(percent * 100)
+
+    print '\r[%s%s] %d%%' % ('#' * progress, ' ' * blanks, pnumber),
     sys.stdout.flush()
 
 def inc_counter(incby=1):
