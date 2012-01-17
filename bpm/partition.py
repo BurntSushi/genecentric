@@ -2,6 +2,7 @@ from functools import partial
 import random
 
 from bpm import conf, emap, parallel
+from bpm import debug
 
 def bpms():
     '''
@@ -9,7 +10,7 @@ def bpms():
     generates a list of BPMs in parallel.
     '''
     happyparts = parallel.pmap(localmaxcut, xrange(0, conf.M))
-    # debug.echotime('after generating happy partitions') 
+    debug.echotime('after generating happy partitions')
     return parallel.pmap(partial(group_genes, happyparts), 
                          enumerate(emap.genes))
 

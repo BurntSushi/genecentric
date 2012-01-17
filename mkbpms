@@ -6,13 +6,13 @@ from bpm import conf, emap, partition, prune
 from bpm import debug
 
 if __name__ == '__main__':
-    # debug.echotime('initial') 
+    debug.echotime('initial')
     emap.load_genes() # Creates global variables emap.genes and emap.gis
-    # debug.echotime('after loading genes') 
+    debug.echotime('after loading genes')
     bpms = partition.bpms()
-    # debug.echotime('after bpm generation') 
+    debug.echotime('after bpm generation')
     bpms = prune.prune(bpms)
-    # debug.echotime('after pruning') 
+    debug.echotime('after pruning')
     
     outf = open(conf.bpm, 'w+')
     out = csv.writer(outf, delimiter='\t')
