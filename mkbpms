@@ -1,0 +1,23 @@
+#!/usr/bin/env python2.7
+
+import csv
+
+from bpm import conf, emap, partition, prune
+from bpm import debug
+
+if __name__ == '__main__':
+    # debug.echotime('initial') 
+    emap.load_genes() # Creates global variables emap.genes and emap.gis
+    # debug.echotime('after loading genes') 
+    bpms = partition.bpms()
+    # debug.echotime('after bpm generation') 
+    bpms = prune.prune(bpms)
+    # debug.echotime('after pruning') 
+    
+    outf = open(conf.bpm, 'w+')
+    out = csv.writer(outf, delimiter='\t')
+    for i, (mod1, mod2) in enumerate(bpms):
+        mod1, mod2 = list(mod1), list(mod2)
+        out.writerow(['BPM%d/Module1' % i] + mod1)
+        out.writerow(['BPM%d/Module2' % i] + mod2)
+
