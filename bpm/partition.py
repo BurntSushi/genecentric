@@ -4,17 +4,21 @@ import random
 from bpm import conf, emap, parallel
 from bpm import debug
 
+happyparts = None
+
 def bpms():
+    global happyparts
+
     '''
     Generates a list of happy bipartitions in parallel and then
     generates a list of BPMs in parallel.
     '''
     happyparts = parallel.pmap(localmaxcut, xrange(0, conf.M))
     debug.echotime('after generating happy partitions')
-    return parallel.pmap(partial(group_genes, happyparts), 
+    return parallel.pmap(group_genes, 
                          enumerate(emap.genes))
 
-def group_genes(happyparts, (i, g1)):
+def group_genes((i, g1)):
     '''
     group_genes is applied to every gene, and a BPM is generated from *every*
     gene. In particular, given M happy bipartitions, generate a BPM where
@@ -26,12 +30,8 @@ def group_genes(happyparts, (i, g1)):
 
     for g2 in emap.genes:
         # Count the number of times g2 is in the same set as g2
-        freqsame = 0
-        for A, B in happyparts:
-            if (g1 in A and g2 in A) or (g1 in B and g2 in B):
-                freqsame += 1
-        # freqsame = sum([1 for A, B in happyparts 
-                          # if (g1 in A and g2 in A) or (g1 in B and g2 in B)]) 
+        freqsame = sum([1 for A, B in happyparts
+                          if (g1 in A and g2 in A) or (g1 in B and g2 in B)])
 
         ratio = float(freqsame) / conf.M
         if ratio >= conf.C:
