@@ -26,8 +26,12 @@ def group_genes(happyparts, (i, g1)):
 
     for g2 in emap.genes:
         # Count the number of times g2 is in the same set as g2
-        freqsame = sum([1 for A, B in happyparts
-                          if (g1 in A and g2 in A) or (g1 in B and g2 in B)])
+        freqsame = 0
+        for A, B in happyparts:
+            if (g1 in A and g2 in A) or (g1 in B and g2 in B):
+                freqsame += 1
+        # freqsame = sum([1 for A, B in happyparts 
+                          # if (g1 in A and g2 in A) or (g1 in B and g2 in B)]) 
 
         ratio = float(freqsame) / conf.M
         if ratio >= conf.C:
@@ -71,8 +75,8 @@ def localmaxcut(m):
     unhappy = get_unhappy(nweights)
 
     while unhappy:
-        v = random.choice(unhappy)
-        # v = get_most_unhappy(unhappy, nweights) 
+        # v = random.choice(unhappy) 
+        v = get_most_unhappy(unhappy, nweights)
 
         if v in A:
             A.remove(v)
