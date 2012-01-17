@@ -35,6 +35,8 @@ aa('--no-prune', dest='pruning', action='store_false',
    help='If set, no pruning will occur. Note that --minimum-size and '
         '--maximum-size will still have an effect. Set those to 0 to '
         'disable that pruning.')
+aa('--no-progress', dest='progress', action='store_false',
+   help='If set, the progress bar will not be shown.')
 aa('-v', '--verbose', dest='verbose', action='store_true',
    help='If set, more output will be shown.')
 

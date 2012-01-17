@@ -1,4 +1,3 @@
-from functools import partial
 import random
 
 from bpm import conf, emap, parallel
@@ -17,12 +16,10 @@ def bpms():
     # for parallelism to be effective with 'group_genes'. I was currying
     # 'happyparts' with group_genes, but for whatever reason, this stopped
     # multiprocessing from keeping all of the cores hot.
-    global happyparts
+    global happyparts, counter
 
     happyparts = parallel.pmap(localmaxcut, xrange(0, conf.M))
-    debug.echotime('after generating happy partitions')
-    return parallel.pmap(group_genes, 
-                         enumerate(emap.genes))
+    return parallel.pmap(group_genes, enumerate(emap.genes))
 
 def group_genes((i, g1)):
     '''
@@ -32,6 +29,8 @@ def group_genes((i, g1)):
     bipartitions C% of the time and the second module contains all genes
     that appeared in the opposite set in the M bipartitions C% of the time.
     '''
+    global counter
+
     mod1, mod2 = [], []
 
     for g2 in emap.genes:
@@ -45,8 +44,10 @@ def group_genes((i, g1)):
         elif (1 - ratio) >= conf.C:
             mod2.append(g2)
 
-    # print '%d of %d BPMs generated...' % (i + 1, gcount) 
-    # flush() 
+    parallel.inc_counter()
+    parallel.print_progress()
+    # debug.progress('%d of %d BPMs generated...'  
+                    # % (parallel.get_counter(), emap.genecount())) 
 
     return set(mod1), set(mod2)
 
@@ -56,6 +57,8 @@ def localmaxcut(m):
     applying 'Weighted-Flip' (from Cowen et al., 2011) until there are no
     unhappy genes left.
     '''
+    global counter
+
     A, B = random_bipartition()
 
     same_set = lambda g1, g2: (g1 in A and g2 in A) or (g1 in B and g2 in B)
@@ -81,8 +84,7 @@ def localmaxcut(m):
     unhappy = get_unhappy(nweights)
 
     while unhappy:
-        # v = random.choice(unhappy) 
-        v = get_most_unhappy(unhappy, nweights)
+        v = random.choice(unhappy)
 
         if v in A:
             A.remove(v)
@@ -119,22 +121,12 @@ def localmaxcut(m):
         # Refresh the unhappy list
         unhappy = get_unhappy(nweights)
 
-    # print '%d of %d partitions done...' % (m + 1, conf.M) 
-    # sys.stdout.flush() 
+    parallel.inc_counter()
+    parallel.print_progress()
+    # debug.progress('%d of %d partitions done...'  
+                    # % (parallel.get_counter(), conf.M)) 
 
     return A, B
-
-def get_most_unhappy(unhappy, nweights):
-    def unhappiness(g):
-        return abs(nweights[g]['same'] - nweights[g]['other'])
-
-    saddest, sadscore = unhappy[0], unhappiness(unhappy[0])
-    for g in unhappy[1:]:
-        newscore = unhappiness(g)
-        if newscore > sadscore:
-            saddest, sadscore = g, newscore
-
-    return saddest
 
 def get_unhappy(nweights):
     '''

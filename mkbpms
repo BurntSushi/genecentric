@@ -2,17 +2,18 @@
 
 import csv
 
-from bpm import conf, emap, partition, prune
-from bpm import debug
+from bpm import conf, emap, parallel, partition, prune
 
 if __name__ == '__main__':
-    debug.echotime('initial')
+    parallel.print_progress()
+
     emap.load_genes() # Creates global variables emap.genes and emap.gis
-    debug.echotime('after loading genes')
+
+    # Calculate the total number of steps so we can measure progress
+    parallel.steps = conf.M + emap.genecount() + sum(parallel.costs.values())
+
     bpms = partition.bpms()
-    debug.echotime('after bpm generation')
     bpms = prune.prune(bpms)
-    debug.echotime('after pruning')
     
     outf = open(conf.bpm, 'w+')
     out = csv.writer(outf, delimiter='\t')
