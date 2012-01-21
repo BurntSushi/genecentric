@@ -1,0 +1,45 @@
+#!/usr/bin/env python2.7
+
+import sys
+
+import bpm.cmdargs.goenrich # Which command line arguments do we want?
+from bpm import bpmreader, conf, emap, funcassociate
+
+emap.load_genes() # Creates global variables emap.genes and emap.gis
+bpms = bpmreader.read(conf.bpm)
+
+c = funcassociate.FuncassociateClient()
+
+for i, b in enumerate(bpms):
+    for modnum, mod in enumerate(b):
+        print >> sys.stderr, 'Performing GO enrichment for BPM %d Module %d' % (i, modnum)
+
+        print 'Performing GO enrichment for BPM %d Module %d' % (i, modnum)
+        response = c.functionate(query=mod,
+                                 species='Saccharomyces cerevisiae',
+                                 namespace='sgd_systematic',
+                                 genespace=list(emap.genes))
+
+        print 'Input (%d): %s' % (len(mod), str(mod))
+
+        print "OVERREPRESENTED ATTRIBUTES"
+
+        headers = ("N", "X", "LOD", "P", "P_adj", "attrib ID", "attrib name")
+        print "\t".join(headers)
+
+        info = response["request_info"]
+        reps = info["reps"]
+        below_detection_threshhold = "< %f" % (1.0/float(reps))
+
+        for row in response["over"]:
+            row.pop(1)
+            if row[4] is 0:
+                row[4] = below_detection_threshhold
+            print "\t".join(map(str, row))
+
+        print "\nREQUEST INFO"
+        for k in info.keys():
+            print "%s: %s" % (k, info[k])
+
+        print '#' * 79
+

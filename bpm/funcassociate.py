@@ -8,18 +8,13 @@
 ################################################################
 
 import re
-import sys
-import time
 import signal
 import socket
-from inspect import getargspec, getargvalues, currentframe
+from inspect import getargspec
 
 import httplib
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
+import json
 
 """
 A client class for the FuncAssociate web service at
@@ -269,3 +264,4 @@ if '__main__' == __name__:
     print "\nREQUEST INFO"
     for k in info.keys():
         print "%s: %s" % (k, info[k])
+
