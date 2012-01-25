@@ -20,7 +20,7 @@ def load_genes():
     memory usage but saves cpu cycles when looking up interaction scores.
     Basically, we force the dictionary to be a reflexive matrix.
     '''
-    for row in csv.reader(open(conf.emap)):
+    for row in csv.DictReader(open(conf.emap), delimiter='\t'):
         if row['ft1_allele'] != 'deletion' or row['ft2_allele'] != 'deletion':
             continue
 
