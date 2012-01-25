@@ -11,7 +11,9 @@ bpms = bpmreader.read(conf.bpm)
 c = funcassociate.FuncassociateClient()
 
 for i, b in enumerate(bpms):
+# for i, b in [(0, bpms[0])]: 
     for modnum, mod in enumerate(b):
+    # for modnum, mod in [(0, b[0])]: 
         print >> sys.stderr, 'Performing GO enrichment for BPM %d Module %d' % (i, modnum)
 
         print 'Performing GO enrichment for BPM %d Module %d' % (i, modnum)

@@ -45,7 +45,8 @@ def interweight((A, B)):
 
     The value returned is a BPM "decorated" with the interaction weight for
     sorting purposes. This roundabout means of decoration is used so that
-    parallelism can be used for calculating the interaction weights.
+    parallelism can be used for calculating the interaction weights. (As
+    opposed to using a higher order function with 'sorted'.)
     '''
     # For converting a tuple to two arguments
     gitup = lambda (g1, g2): emap.gi(g1, g2)

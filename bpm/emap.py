@@ -14,18 +14,27 @@ def load_genes():
 
     This gene information is then available at the 'emap' module level, since
     they are both used pervasively throughout BPM generation.
+
+    Finally, if we add the gene pair (g1, g2) with score S to the dictionary,
+    then we'll also add (g2, g1) with score S to the dictionary. This increases
+    memory usage but saves cpu cycles when looking up interaction scores.
+    Basically, we force the dictionary to be a reflexive matrix.
     '''
     for row in csv.reader(open(conf.emap)):
-        ginter = float(row[2])
+        if row['ft1_allele'] != 'deletion' or row['ft2_allele'] != 'deletion':
+            continue
+
+        g1, g2 = row['ft1_systematic_name'], row['ft2_systematic_name']
+        ginter = float(row['int_score'])
         if ginter < 0:
             ginter = - (ginter ** 2)
         else:
             ginter = ginter ** 2
-        gis[(row[0], row[1])] = ginter
-        gis[(row[1], row[0])] = ginter
+        gis[(g1, g2)] = ginter
+        gis[(g2, g1)] = ginter
 
-        genes.add(row[0])
-        genes.add(row[1])
+        genes.add(g1)
+        genes.add(g2)
 
     parallel.inc_counter(parallel.costs['load_genes'])
 
