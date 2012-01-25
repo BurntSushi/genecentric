@@ -24,8 +24,13 @@ def load_genes():
         if row['ft1_allele'] != 'deletion' or row['ft2_allele'] != 'deletion':
             continue
 
+        # If there is no interaction score, force it to be 0
+        try:
+            ginter = float(row['int_score'])
+        except ValueError:
+            ginter = 0.0
+
         g1, g2 = row['ft1_systematic_name'], row['ft2_systematic_name']
-        ginter = float(row['int_score'])
         if ginter < 0:
             ginter = - (ginter ** 2)
         else:
