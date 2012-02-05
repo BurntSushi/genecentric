@@ -1,47 +1,36 @@
 #!/usr/bin/env python2.7
 
-import sys
-
 import bpm.cmdargs.goenrich # Which command line arguments do we want?
-from bpm import bpmreader, conf, emap, funcassociate
+from bpm import bpmreader, conf, emap, faread, parallel
+
+parallel.costs['load_genes'] = 10
+parallel.print_progress()
 
 emap.load_genes() # Creates global variables emap.genes and emap.gis
 bpms = bpmreader.read(conf.bpm)
 
-c = funcassociate.FuncassociateClient()
+# Calculate the total number of steps so we can measure progress
+parallel.steps = (len(bpms) * 2) + sum(parallel.costs.itervalues())
 
-for i, b in enumerate(bpms):
-# for i, b in [(0, bpms[0])]: 
-    for modnum, mod in enumerate(b):
-    # for modnum, mod in [(0, b[0])]: 
-        print >> sys.stderr, 'Performing GO enrichment for BPM %d Module %d' % (i, modnum)
+def modules():
+    for i, b in enumerate(bpms):
+        for modnum, mod in enumerate(b):
+            yield i, modnum, mod
 
-        print 'Performing GO enrichment for BPM %d Module %d' % (i, modnum)
-        response = c.functionate(query=mod,
-                                 species='Saccharomyces cerevisiae',
-                                 namespace='sgd_systematic',
-                                 genespace=list(emap.genes))
+def enrich((bpmi, modi, genes)):
+    goterms = faread.functionate(genes)
 
-        print 'Input (%d): %s' % (len(mod), str(mod))
+    parallel.inc_counter()
+    parallel.print_progress()
+    return bpmi, modi, genes, goterms
 
-        print "OVERREPRESENTED ATTRIBUTES"
+enrichment = parallel.pmap(enrich, modules())
+parallel.print_progress(final=True)
 
-        headers = ("N", "X", "LOD", "P", "P_adj", "attrib ID", "attrib name")
-        print "\t".join(headers)
-
-        info = response["request_info"]
-        reps = info["reps"]
-        below_detection_threshhold = "< %f" % (1.0/float(reps))
-
-        for row in response["over"]:
-            row.pop(1)
-            if row[4] is 0:
-                row[4] = below_detection_threshhold
-            print "\t".join(map(str, row))
-
-        print "\nREQUEST INFO"
-        for k in info.keys():
-            print "%s: %s" % (k, info[k])
-
-        print '#' * 79
+for bpmi, modi, genes, goterms in sorted(enrichment):
+    print '> BPM%d/Module%d' % (bpmi, modi)
+    print '\t'.join(genes)
+    for accession, goterm in goterms.iteritems():
+        frac = '%d/%d' % (goterm['num_with'], goterm['num_query'])
+        print '%s\t%f\t%s\t%s' % (accession, goterm['p'], frac, goterm['name'])
 

@@ -24,7 +24,7 @@ def pmap(*args, **kargs):
     else:
         return map(*args, **kargs)
 
-def print_progress():
+def print_progress(final=False):
     '''
     This is a nice little progress bar that is reasonably accurate. It isn't
     perfect but should give a rough idea of how much longer the program needs
@@ -45,8 +45,12 @@ def print_progress():
         blanks = spaces - progress
         pnumber = math.ceil(percent * 100)
 
-    print '\r[%s%s] %d%%' % ('#' * progress, ' ' * blanks, pnumber),
-    sys.stdout.flush()
+    print >> sys.stderr, \
+            '\r[%s%s] %d%%' % ('#' * progress, ' ' * blanks, pnumber),
+
+    if final:
+        print >> sys.stderr
+    sys.stderr.flush()
 
 def inc_counter(incby=1):
     '''
