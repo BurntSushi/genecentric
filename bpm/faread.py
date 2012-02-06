@@ -22,10 +22,10 @@ def functionate(genes):
         assert row['accession'] not in goterms
         goterms[row['accession']] = {
             'name': row['goname'],
-            'p': row['adj_p'],
-            'num_genespace_with': row['num_genespace_with'],
-            'num_with': row['num_with'],
-            'num_query': row['num_query'],
+            'p': float(row['adj_p']),
+            'num_genespace_with': int(row['num_genespace_with']),
+            'num_with': int(row['num_with']),
+            'num_query': int(row['num_query']),
             'genes': set(), # see below
         }
 
@@ -57,8 +57,12 @@ def functionate(genes):
     # This is commented out because there is a bug in Funcassociate
     # where the enrichment counts don't match the entity-attribute
     # correspondence.
-    # for accession, goterm in goterms.iteritems(): 
-        # assert len(goterm['genes']) != goterm['num_with'] 
+    # N.B. This was actually a performance limitation that has since
+    # been lifted at my request. If it comes back, this assertion
+    # will have to be removed.
+    for accession, goterm in goterms.iteritems():
+        assert len(goterm['genes']) == goterm['num_with'], \
+                '%s: %s' % (accession, str(goterm))
     
     return goterms
 

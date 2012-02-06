@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.7
 
 import bpm.cmdargs.goenrich # Which command line arguments do we want?
-from bpm import bpmreader, conf, emap, faread, parallel
+from bpm import bpmreader, conf, emap, enrichment, parallel
 
 parallel.costs['load_genes'] = 10
 parallel.print_progress()
@@ -17,20 +17,10 @@ def modules():
         for modnum, mod in enumerate(b):
             yield i, modnum, mod
 
-def enrich((bpmi, modi, genes)):
-    goterms = faread.functionate(genes)
-
-    parallel.inc_counter()
-    parallel.print_progress()
-    return bpmi, modi, genes, goterms
-
-enrichment = parallel.pmap(enrich, modules())
+bpmenrichment = parallel.pmap(enrichment.enrich, modules())
 parallel.print_progress(final=True)
 
-for bpmi, modi, genes, goterms in sorted(enrichment):
-    print '> BPM%d/Module%d' % (bpmi, modi)
-    print '\t'.join(genes)
-    for accession, goterm in goterms.iteritems():
-        frac = '%d/%d' % (goterm['num_with'], goterm['num_query'])
-        print '%s\t%f\t%s\t%s' % (accession, goterm['p'], frac, goterm['name'])
+with open(conf.enrichment, 'w+') as out:
+    for bpmi, modi, genes, goterms in sorted(bpmenrichment):
+        print >> out, enrichment.write_bpm(out, bpmi, modi, genes, goterms)
 
