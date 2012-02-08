@@ -23,3 +23,5 @@ for i, (mod1, mod2) in enumerate(bpms):
     out.writerow(['BPM%d/Module1' % i] + mod1)
     out.writerow(['BPM%d/Module2' % i] + mod2)
 
+parallel.print_progress(final=True)
+
