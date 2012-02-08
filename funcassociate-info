@@ -1,0 +1,17 @@
+#!/usr/bin/env python2.7
+
+import sys
+
+import bpm.cmdargs.funcassociateinfo # Which command line arguments do we want?
+from bpm import conf, faclient
+
+fc = faclient.FuncassociateClient()
+
+if conf.command == 'species':
+    print '\n'.join(sorted(fc.available_species()))
+elif conf.command == 'namespaces': # cmdargs errors if conf.species is absent
+    print '\n'.join(sorted(fc.available_namespaces(conf.species)))
+else: # argparse should catch us before we get here
+    print >> sys.stderr, 'Invalid command %s.' % conf.command
+    sys.exit(1)
+
