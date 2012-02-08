@@ -5,9 +5,10 @@ from bpm import conf, emap, faclient
 def functionate(genes):
     c = faclient.FuncassociateClient()
     response = c.functionate(query=genes, 
-                             species='Saccharomyces cerevisiae', 
-                             namespace='sgd_systematic',
-                             genespace=list(emap.genes))
+                             species=conf.fa_species, 
+                             namespace=conf.fa_namespace,
+                             genespace=list(emap.genes),
+                             cutoff=conf.fa_cutoff)
 
     # Lets label the info for each GO term, shall we?
     # Names ending in 'with' should be read as, for example:
