@@ -41,8 +41,24 @@ aa('-p', '--processes', dest='processes', type=int, default=__default_cpus,
                         'this too high.')
 aa('--hide-enriched-genes', dest='hide_enriched_genes', action='store_true',
    help='If set, the enriched genes for each GO term will not be written '
-        'to the output file. This may cut down on file size if there is '
-        'a lot of enrichment.')
+        'to the output file. This may (modestly) cut down on file size if '
+        'there is a lot of enrichment.')
+
+aa('--fa-species', dest='fa_species', type=str, 
+   default='Saccharomyces cerevisiae', metavar='FA_SPECIES',
+   help='The species to be used by Funcassociate. Use the '
+        '\'funcassociate-info\' command to get a list of available species.')
+aa('--fa-namespace', dest='fa_namespace', type=str,
+   default='sgd_systematic', metavar='FA_NAMESPACE',
+   help='The namespace to be used by Funcassociate. This can vary depending '
+        'upon the gene identifiers used in your E-MAP/SGA file. '
+        'Use the \'funcassociate-info\' command to get a list of available '
+        'namespaces for a given species.')
+aa('--fa-cutoff', dest='fa_cutoff', type=float, default=0.05, 
+   metavar='FA_CUTOFF',
+   help='The p-value cutoff for GO enrichment to be used with Funcassociate. '
+        'It should be in the interval (0, 1].')
+
 aa('--no-progress', dest='progress', action='store_false',
    help='If set, the progress bar will not be shown.')
 aa('-v', '--verbose', dest='verbose', action='store_true',
