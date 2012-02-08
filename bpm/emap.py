@@ -1,5 +1,7 @@
 from collections import defaultdict
 import csv
+import os
+import sys
 
 from bpm import conf, parallel
 
@@ -12,6 +14,14 @@ def load_genes():
     Loads all of the gene pairs and their corresponding interaction scores
     into memory. It also keeps a set of all genes for iterative purposes.
 
+    There is some criteria for excluding genes from this process:
+    1) If an essential gene list file is provided, any gene in that file
+       is excluded from the set of genes used.
+    2) If an interaction score is not the result of a deletion/deletion event,
+       it is excluded from the set of genes used.
+    3) If an interaction score is missing or zero, it is *KEPT* in the set of
+       genes used to generate BPMs with an interaction score of 0.
+
     This gene information is then available at the 'emap' module level, since
     they are both used pervasively throughout BPM generation.
 
@@ -20,7 +30,18 @@ def load_genes():
     memory usage but saves cpu cycles when looking up interaction scores.
     Basically, we force the dictionary to be a reflexive matrix.
     '''
+    essentials = set()
+    if conf.essentials:
+        for line in open(conf.essentials):
+            essentials.add(line.strip())
+
     for row in csv.DictReader(open(conf.emap), delimiter='\t'):
+        # Ignore pairs where one or both genes are in the essential gene list
+        if row['ft1_systematic_name'] in essentials or \
+                row['ft2_systematic_name'] in essentials:
+            continue
+
+        # Only use interaction scores from a deletion/deletion event
         if row['ft1_allele'] != 'deletion' or row['ft2_allele'] != 'deletion':
             continue
 

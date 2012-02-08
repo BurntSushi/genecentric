@@ -1,7 +1,8 @@
-import bpm
-
 import argparse
 import multiprocessing as mp
+
+import bpm
+from bpm.cmdargs import assert_read_access
 
 try:
     __cpus = mp.cpu_count()
@@ -22,6 +23,11 @@ aa('bpm', type=str,
    metavar='BPM_FILE', help='Location of the BPM file.')
 aa('enrichment', type=str,
    metavar='ENRICHMENT_FILE', help='Output file for GO enrichment.')
+aa('-e', '--essential-list', dest='essentials', type=str, default=None,
+   metavar='ESSENTIAL_FILE',
+   help='The location of an essential gene list file. (One gene per line.) '
+        'Any genes in this file will be excluded from the set of genes used '
+        'to generate BPMs.')
 aa('-s', '--sort-go-by', dest='sort_go_by', type=str, default='p',
    choices=['p', 'accession', 'name', 'num_genes_with'],
    metavar='GO_SORT',
@@ -71,6 +77,12 @@ conf = parser.parse_args()
 # CPUs, forcefully lower it to the number of CPUs.
 if conf.processes > __cpus:
     conf.processes = __cpus
+
+# Nice error messages if files don't exist...
+assert_read_access(conf.emap)
+assert_read_access(conf.bpm)
+if conf.essentials: # optional file
+    assert_read_access(conf.essentials)
 
 # Set the global conf variable
 bpm.conf = conf

@@ -1,7 +1,8 @@
-import bpm
-
 import argparse
 import multiprocessing as mp
+
+import bpm
+from bpm.cmdargs import assert_read_access
 
 try:
     __cpus = mp.cpu_count()
@@ -16,6 +17,11 @@ aa('emap', type=str,
    metavar='EMAP_FILE', help='Location of the EMAP file.')
 aa('bpm', type=str,
    metavar='BPM_FILE', help='Where the BPM output will be written.')
+aa('-e', '--essential-list', dest='essentials', type=str, default=None,
+   metavar='ESSENTIAL_FILE',
+   help='The location of an essential gene list file. (One gene per line.) '
+        'Any genes in this file will be excluded from the set of genes used '
+        'to generate BPMs.')
 aa('-c', '--gene-ratio', dest='C', type=float, default=0.90,
    metavar='RATIO', help='Gene ratio threshold')
 aa('-j', '--jaccard', dest='jaccard', type=float, default=0.66,
@@ -49,6 +55,11 @@ conf = parser.parse_args()
 # CPUs, forcefully lower it to the number of CPUs.
 if conf.processes > __cpus:
     conf.processes = __cpus
+
+# Do some error checking on file inputs...
+assert_read_access(conf.emap)
+if conf.essentials > 0: # essentials list is optional
+    assert_read_access(conf.essentials)
 
 # Set the global conf variable
 bpm.conf = conf
