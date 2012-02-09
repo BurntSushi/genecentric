@@ -42,8 +42,8 @@ def load_genes():
             continue
 
         # Only use interaction scores from a deletion/deletion event
-        # if row['ft1_allele'] != 'deletion' or row['ft2_allele'] != 'deletion': 
-            # continue 
+        if row['ft1_allele'] != 'deletion' or row['ft2_allele'] != 'deletion':
+            continue
 
         # If there is no interaction score, force it to be 0
         try:
