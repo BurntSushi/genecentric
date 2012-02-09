@@ -32,7 +32,7 @@ def read_bpm(bpmtext):
 
     bpmids = lines[0]
     m = re.search('BPM(\d+)/Module(\d+)', bpmids)
-    bpmi, modi = m.group(1), m.group(2)
+    bpmi, modi = int(m.group(1)), int(m.group(2))
 
     genes = set(map(str.strip, lines[1].split('\t')))
 
