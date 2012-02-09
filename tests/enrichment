@@ -1,0 +1,206 @@
+#!/usr/bin/env python2.7
+
+import argparse
+from collections import defaultdict, OrderedDict
+import csv
+from itertools import product
+import os.path
+import sys
+
+from bpm.cmdargs import assert_read_access
+from bpm.enrichment import read_bpm
+
+import geneontology as go
+from geneontology.ancestor import closest_common_ancestors
+from geneontology.associations import get_cached_product_count
+
+parser = argparse.ArgumentParser(
+    description='GO enrichment for BPMs',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('enrichment_files', type=str, nargs='+', metavar='ENRICHMENT_FILE',
+   help='A list of one or more enrichment files to run tests on.')
+aa('-s', '--species', type=str, metavar='SPECIES',
+   default='Saccharomyces cerevisiae',
+   help='A valid species name in the GO hierarchy.')
+aa('-e', '--enrich-threshold', dest='enrich_threshold', type=int, 
+   metavar='ENRICHMENT_THRESHOLD', default=500,
+   help='The total number of associations for a GO term to be considered '
+        '"enriched."')
+aa('--short-labels', dest='short_labels', action='store_true',
+   help='If set, short column headers will be used for better formatting '
+        'in a terminal.')
+
+conf = parser.parse_args()
+
+for f in conf.enrichment_files:
+    assert_read_access(f)
+
+# Make sure the species is valid and get the info
+species = go.get_species(*conf.species.split())
+
+result_labels = OrderedDict([
+    # A nice name for the test being run
+    ('name', 'Test name'),
+
+    # Parameters
+    ('c', 'Ratio'),
+    ('M', '# of partitions'), 
+    ('j', 'Jaccard cutoff'),
+    ('p', 'GO p-value'),
+    
+    # Results table
+    ('mods_accepted', 'Modules accepted'),
+    ('mods_withgo', 'Modules with ANY GO term'),
+    ('mods_enriched', 'Modules enriched'),
+    ('bpm_accepted', 'BPMs accepted'),
+    ('bpm_enrich_same', 'BPMs enriched for same function'),
+    ('bpm_enrich_relate', 'BPMs enriched for same or related function'),
+    ('bpm_enrich_diff', 'BPMs enriched for different functions'),
+    ('bpm_one_mod', 'BPMs with one module enriched'),
+    ('bpm_no_mod', 'BPMs with no modules enriched'),
+])
+
+short_labels = { 'name': 'name', 'c': 'c', 'M': 'M', 'j': 'j', 'p': 'p',
+                 'mods_accepted': 'modsa', 'mods_withgo': 'withgo', 
+                 'mods_enriched': 'modsenri',
+                 'bpm_accepted': 'bpma', 'bpm_enrich_same': 'bpmes',
+                 'bpm_enrich_relate': 'bpmer', 'bpm_enrich_diff': 'bpmed',
+                 'bpm_one_mod': 'bpm1m', 'bpm_no_mod': 'bpm0m' }
+
+# Initialize the CSV writer
+if conf.short_labels:
+    header = [short_labels[k] for k in result_labels]
+else:
+    header = result_labels.values()
+writer = csv.DictWriter(sys.stdout, header, delimiter='\t')
+writer.writeheader()
+
+def write_row(row):
+    # Some nice formatting...
+    row['mods_enriched'] = percent(row['mods_enriched'], row['mods_accepted'])
+    row['bpm_enrich_same'] = percent(row['bpm_enrich_same'], 
+                                     row['bpm_accepted'])
+    row['bpm_enrich_relate'] = percent(row['bpm_enrich_relate'], 
+                                       row['bpm_accepted'])
+    row['bpm_enrich_diff'] = percent(row['bpm_enrich_diff'], 
+                                     row['bpm_accepted'])
+    row['bpm_one_mod'] = percent(row['bpm_one_mod'], row['bpm_accepted'])
+    row['bpm_no_mod'] = percent(row['bpm_no_mod'], row['bpm_accepted'])
+
+    if conf.short_labels:
+        writer.writerow({short_labels[k]: v for k, v in row.iteritems()})
+    else:
+        writer.writerow({result_labels[k]: v for k, v in row.iteritems()})
+
+def percent(num, denom):
+    return '%s (%d%%)' % (num, int(float(num) / int(denom) * 100))
+
+def run_tests(f):
+    row = {k: '?' for k in result_labels}
+
+    # Get the parameters from the basename of the file...
+    # test_name-ratio-#_of_partitions-jaccard_cutoff-GO_pvalue
+    # If there aren't enough tokens (where '-' is the delimiter), '?' is used 
+    # in its place. If the tokens are in the wrong order, things will be
+    # confusing!
+    row['name'], row['c'], row['M'], row['j'], row['p'] = parse_filename(f)
+
+    # Split the enrichment file into bpm/module chunks.
+    # Then let the BPM module parse it and give us nice stuff back.
+    bpms = defaultdict(dict)
+    enriched = defaultdict(dict)
+    for bpmtext in open(f).read().split('>')[1:]:
+        bpmi, modi, genes, goterms = read_bpm(bpmtext)
+        bpms[bpmi][modi] = { 'genes': genes, 'goterms': goterms }
+        enriched[bpmi][modi] = None
+
+    # Easy peasy... simple counts
+    row['mods_accepted'] = len(bpms) * 2
+    row['bpm_accepted'] = len(bpms)
+
+    # Count the number of modules with ANY GO term at all
+    row['mods_withgo'] = 0
+    for bi, mi in modules(bpms):
+        if bpms[bi][mi]['goterms']:
+            row['mods_withgo'] += 1
+
+    # Find all GO terms from each enrichment in each module that have
+    # fewer than the enrichment threshold.
+    # (In Leiserson 2011, this number is 500. Which was taken from Kelley
+    #  and Kingsford 2010.)
+    for bi, mi in modules(bpms):
+        enriched[bi][mi] = filter(is_enriched, bpms[bi][mi]['goterms'].keys())
+
+    row['mods_enriched'] = sum([1 for bi, mi in modules(bpms) 
+                                    if enriched[bi][mi]])
+
+    # Keep a set of all BPMs and remove a BPM if they fall under EITHER
+    # the 'bpm_enrich_same' or 'bpm_enrich_relate' categories.
+    bpms_different = set([bi for bi in bpms])
+
+    # Now find the total number of bpms for which both modules have a go
+    # term in common that is *enriched*. (i.e., use the set of enriched
+    # GO terms calculated in the previous set.)
+    row['bpm_enrich_same'] = 0
+    for bi in bpms:
+        # accs = set(bpms[bi][0]['goterms'].keys()) 
+        # if accs.intersection(bpms[bi][1]['goterms'].keys()): 
+        if set(enriched[bi][0]).intersection(enriched[bi][1]):
+            row['bpm_enrich_same'] += 1
+            bpms_different.discard(bi)
+
+    # Find the total number of bpms for which there exists a pair in the
+    # cartesian product of GO terms for module 1 X GO terms for module 2
+    # where the closest common ancestor in the GO hierarchy has fewer
+    # gene associations than the enrichment threshold.
+    row['bpm_enrich_relate'] = 0
+    for bi in bpms:
+        for acc1, acc2 in product(enriched[bi][0], enriched[bi][1]):
+            closest = closest_common_ancestors(acc1, acc2)
+            if any(map(is_enriched, [term['acc'] for term in closest])):
+                row['bpm_enrich_relate'] += 1
+                bpms_different.discard(bi)
+                break
+
+    # Now calculate how many BPMs have only one module enriched
+    # and how many have no modules enriched...
+    row['bpm_one_mod'] = 0
+    row['bpm_no_mod'] = 0
+    for bi in bpms:
+        if (enriched[bi][0] and not enriched[bi][1]) or \
+                (not enriched[bi][0] and enriched[bi][0]):
+            row['bpm_one_mod'] += 1
+        elif not enriched[bi][0] and not enriched[bi][1]:
+            row['bpm_no_mod'] += 1
+
+    row['bpm_enrich_diff'] = len(bpms_different)
+
+    return row
+
+def is_enriched(acc):
+    return product_count(acc) < conf.enrich_threshold
+
+def product_count(acc):
+    return get_cached_product_count(acc, species)
+
+def modules(bpms):
+    for bi in bpms:
+        for mi in bpms[bi]:
+            yield bi, mi
+
+def parse_filename(f):
+    basef = os.path.basename(f)
+    tokens = basef.split('-')
+    retval = ['?', '?', '?', '?', '?']
+
+    for i, token in enumerate(tokens):
+        retval[i] = token
+
+    return retval
+
+if __name__ == '__main__':
+    for f in conf.enrichment_files:
+        write_row(run_tests(f))
+        sys.stdout.flush()
+
