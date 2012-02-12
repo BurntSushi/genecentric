@@ -1,0 +1,96 @@
+#!/usr/bin/env python2.7
+
+import argparse
+from collections import defaultdict, OrderedDict
+import csv
+from itertools import product
+import os.path
+import sys
+
+from bpm.cmdargs import assert_read_access
+
+parser = argparse.ArgumentParser(
+    description='GO enrichment for BPMs',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('emap_file', type=str, nargs='?', metavar='EMAP_FILE',
+   help='Location of the EMAP or SGA file.')
+aa('-e', dest='essential_file', type=str, metavar='ESSENTIALS_FILE',
+   help='Location of a list of essential genes.')
+
+conf = parser.parse_args()
+
+assert_read_access(conf.emap_file)
+if conf.essential_file:
+    assert_read_access(conf.essential_file)
+
+stats = OrderedDict([
+    ('total_rows', 0),
+    ('total_pairs', 0),
+    ('unique_pairs', 0),
+    ('essential', 0),
+    ('del_del', 0),
+    ('del_essential', 0),
+    ('not_del', 0),
+    ('not_del_essential', 0),
+])
+
+nicelabels = {
+    'total_rows': '# of rows/edges/lines in file',
+    'total_pairs': '# of all pairs',
+    'unique_pairs': '# all pairs with order',
+    'essential': '# of essential genes',
+    'del_del': '# of all deletion/deletion edges',
+    'del_essential': '# of all deletion/deletion NON-essential edges',
+    'not_del': '# of all NON-deletion/deletion edges',
+    'not_del_essential': '# of all NON-deletion/deletion NON-essential edges',
+}
+
+# Get the essential genes in a set first
+essentials = set()
+if conf.essential_file:
+    for g in open(conf.essential_file):
+        essentials.add(g.strip())
+
+allpairs = set()
+allpairs_noallele = set()
+uniquepairs = set()
+deldel = set()
+notdeldel = set()
+for row in csv.DictReader(open(conf.emap_file), delimiter='\t'):
+    g1, g2 = row['ft1_systematic_name'], row['ft2_systematic_name']
+    a1, a2 = row['ft1_allele'], row['ft2_allele']
+
+    allpairs.add(((g1, a1), (g2, a2)))
+    allpairs_noallele.add((g1, g2))
+
+    if (g2, g1) not in uniquepairs:
+        uniquepairs.add((g1, g2))
+
+    if (a1, a2) == ('deletion', 'deletion'):
+        deldel.add(((g1, a1), (g2, a2)))
+    else:
+        notdeldel.add(((g1, a1), (g2, a2)))
+
+stats['total_rows'] = len(allpairs)
+stats['total_pairs'] = len(allpairs_noallele)
+stats['unique_pairs'] = len(uniquepairs)
+stats['del_del'] = len(deldel)
+stats['not_del'] = len(notdeldel)
+stats['essential'] = len(essentials)
+
+# Calculate some of the stuff above but after removing essentials...
+for (g1, a1), (g2, a2) in allpairs:
+    if g1 in essentials or g2 in essentials:
+        continue
+    
+    if (a1, a2) == ('deletion', 'deletion'):
+        stats['del_essential'] += 1
+    else:
+        stats['not_del_essential'] += 1
+
+maxlenlabel = max([len(v) for v in nicelabels.itervalues()]) + 2
+for label, value in stats.iteritems():
+    nicelabel = nicelabels[label]
+    print '%s%s%d' % (nicelabel, ' ' * (maxlenlabel - len(nicelabel)), value)
+
