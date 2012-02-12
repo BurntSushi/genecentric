@@ -1,12 +1,11 @@
 from collections import defaultdict
 import csv
-import os
-import sys
 
 from bpm import conf, parallel
 
 gis = defaultdict(float)
 genes = set()
+genespace = set() # slightly bigger---include all EMAP genes
 numgenes = 0
 
 def load_genes():
@@ -36,9 +35,13 @@ def load_genes():
             essentials.add(line.strip())
 
     for row in csv.DictReader(open(conf.emap), delimiter='\t'):
+        g1, g2 = row['ft1_systematic_name'], row['ft2_systematic_name']
+
+        genespace.add(g1)
+        genespace.add(g2)
+
         # Ignore pairs where one or both genes are in the essential gene list
-        if row['ft1_systematic_name'] in essentials or \
-                row['ft2_systematic_name'] in essentials:
+        if g1 in essentials or g2 in essentials:
             continue
 
         # Only use interaction scores from a deletion/deletion event
@@ -51,7 +54,6 @@ def load_genes():
         except ValueError:
             ginter = 0.0
 
-        g1, g2 = row['ft1_systematic_name'], row['ft2_systematic_name']
         if ginter < 0:
             ginter = - (ginter ** 2)
         else:

@@ -7,7 +7,7 @@ def functionate(genes):
     response = c.functionate(query=genes, 
                              species=conf.fa_species, 
                              namespace=conf.fa_namespace,
-                             genespace=list(emap.genes),
+                             genespace=list(emap.genespace),
                              cutoff=conf.fa_cutoff)
 
     # Lets label the info for each GO term, shall we?
