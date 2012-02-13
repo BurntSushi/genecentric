@@ -95,7 +95,10 @@ def write_row(row):
         writer.writerow({result_labels[k]: v for k, v in row.iteritems()})
 
 def percent(num, denom):
-    return '%s (%d%%)' % (num, int(float(num) / int(denom) * 100))
+    if int(denom) == 0:
+        return '0 (0%)'
+    else:
+        return '%s (%d%%)' % (num, int(float(num) / int(denom) * 100))
 
 def run_tests(f):
     row = {k: '?' for k in result_labels}
