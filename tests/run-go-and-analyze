@@ -1,0 +1,60 @@
+#!/bin/sh
+
+if [ -z $BPM ]; then
+  echo "The BPM environment variable is not set." >&2
+  echo "It should be set to the path of the BPM directory." >&2
+  exit 1
+fi
+
+short=
+if [ "$1" = "--short-labels" ]; then
+  short="--short-labels"
+  shift
+fi
+
+if [ $# -lt 4 ]; then
+  echo "Not enough arguments." >&2
+  echo "Usage: $(basename $0) [--short-labels] p-values emap-file essential-file bpm-files" >&2
+  exit 1
+fi
+
+ps=$1
+shift
+
+emap=$1
+shift
+
+essentials=$1
+shift
+
+gobpms=()
+i=0
+for p in ${ps[@]}; do
+  for f; do
+    if ! [[ "$f" = *.bpm ]]; then
+      echo "'$f' is not a BPM file." >&2
+      continue
+    fi
+
+    fbase=$(basename "$f" '.bpm')
+    testName=$(echo "$fbase" | cut -d'-' -f1)
+    c=$(echo "$fbase" | cut -d'-' -f2)
+    m=$(echo "$fbase" | cut -d'-' -f3)
+    j=$(echo "$fbase" | cut -d'-' -f4)
+
+    newf="$testName-$c-$m-$j-$p.gobpm"
+    gobpms[$i]="$newf"
+    i=$((i + 1))
+
+    echo "Getting enrichment results for $newf..."
+    
+    $BPM/go-enrich -e $essentials -s name -t asc \
+      --fa-species "Saccharomyces cerevisiae" \
+      --fa-namespace "sgd_systematic" \
+      --fa-cutoff "$p" \
+      $emap $f $newf
+  done
+done
+
+$BPM/tests/enrichment $short -s "Saccharomyces cerevisiae" -e 500 ${gobpms[@]}
+
