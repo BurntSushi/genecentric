@@ -65,7 +65,6 @@ aa('--fa-cutoff', dest='fa_cutoff', type=float, default=0.05,
    help='The p-value cutoff for GO enrichment to be used with Funcassociate. '
         'It should be in the interval (0, 1].')
 aa('--fa-genespace', dest='fa_genespace', action='store_true',
-   metavar='FA_GENESPACE',
    help='If set, the set of genes from the provided EMAP file will be sent '
         'as the genespace to Funcassociate. Otherwise, the default species '
         'genespace will be used.')
