@@ -11,7 +11,15 @@ source ~/.envrc
 
 cd $BPM/output
 
-$BPM/tests/run-go-and-analyze '0.01' \
+for f in ${test_name}_*.bpm; do
+  cp "$f" "${test_name}.emap_${f##*_}"
+done
+
+$BPM/tests/run-go-and-analyze '0.01 0.05' \
   /tmp/chrombio.csv /tmp/essentials ${test_name}_*.bpm \
   > $BPM/output/${test_name}-results.csv
+
+$BPM/tests/run-go-and-analyze --fa-genespace '0.01 0.05' \
+  /tmp/chrombio.csv /tmp/essentials ${test_name}.emap_*.bpm \
+  > $BPM/output/${test_name}.emap-results.csv
 
