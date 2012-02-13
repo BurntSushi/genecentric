@@ -3,11 +3,16 @@ import sys
 from bpm import conf, emap, faclient
 
 def functionate(genes):
+    if conf.fa_genespace:
+        genespace = list(emap.genespace)
+    else:
+        genespace = None
+
     c = faclient.FuncassociateClient()
     response = c.functionate(query=genes, 
                              species=conf.fa_species, 
                              namespace=conf.fa_namespace,
-                             genespace=list(emap.genespace),
+                             genespace=genespace,
                              cutoff=conf.fa_cutoff)
 
     # Lets label the info for each GO term, shall we?
