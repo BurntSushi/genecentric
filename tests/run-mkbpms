@@ -1,0 +1,36 @@
+#!/bin/sh
+
+if [ $# -lt 7 ]; then
+  echo "Not enough arguments." >&2
+  echo "Usage: $(basename $0) test-name emap-file essential-file ratios set-sizes jaccards repeat" >&2
+  exit 1
+fi
+
+test_name=$1
+emap=$2
+essentials=$3
+ratios=$4
+set_sizes=$5
+jaccards=$6
+repeat=$7
+
+case `num-processors` in
+  48) procs=40 ;;
+   *) procs=`num-processors` ;;
+ esac
+
+for ratio in ${ratios[@]}; do
+  for set_size in ${set_sizes[@]}; do
+    for jaccard in ${jaccards[@]}; do
+      for ((i=1; i<=$repeat; i++)); do
+        bpmfile="${test_name}_${i}-$ratio-$set_size-$jaccard.bpm"
+
+        echo "Generating BPMs for $bpmfile..."
+        $BPM/mkbpms -e $essentials -c $ratio -m $set_size -j $jaccard \
+          -p $procs --minimum-size 3 --maximum-size 25 \
+          $emap $bpmfile
+      done
+    done
+  done
+done
+
