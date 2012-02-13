@@ -5,6 +5,7 @@ from collections import defaultdict, OrderedDict
 import csv
 from itertools import product
 import os.path
+import re
 import sys
 
 from bpm.cmdargs import assert_read_access
@@ -191,6 +192,7 @@ def modules(bpms):
 
 def parse_filename(f):
     basef = os.path.basename(f)
+    basef = re.sub('\.gobpm$', '', basef)
     tokens = basef.split('-')
     retval = ['?', '?', '?', '?', '?']
 
