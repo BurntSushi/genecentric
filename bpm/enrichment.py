@@ -2,8 +2,8 @@ import re
 
 from bpm import conf, faread, parallel
 
-def enrich((bpmi, modi, genes)):
-    goterms = faread.functionate(genes)
+def enrich(modulecnt, (bpmi, modi, genes)):
+    goterms = faread.functionate(genes, modulecnt)
 
     parallel.inc_counter()
     parallel.print_progress()

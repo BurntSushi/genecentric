@@ -1,5 +1,7 @@
 #!/usr/bin/env python2.7
 
+from functools import partial
+
 import bpm.cmdargs.goenrich # Which command line arguments do we want?
 from bpm import bpmreader, conf, emap, enrichment, parallel
 
@@ -17,7 +19,8 @@ def modules():
         for modnum, mod in enumerate(b):
             yield i, modnum, mod
 
-bpmenrichment = parallel.pmap(enrichment.enrich, modules())
+enrich = partial(enrichment.enrich, len(bpms) * 2)
+bpmenrichment = parallel.pmap(enrich, modules())
 parallel.print_progress(final=True)
 
 with open(conf.enrichment, 'w+') as out:

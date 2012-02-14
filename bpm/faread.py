@@ -2,7 +2,7 @@ import sys
 
 from bpm import conf, emap, faclient
 
-def functionate(genes):
+def functionate(genes, modulecnt):
     if conf.fa_genespace:
         genespace = list(emap.genespace)
     else:
@@ -13,6 +13,7 @@ def functionate(genes):
                              species=conf.fa_species, 
                              namespace=conf.fa_namespace,
                              genespace=genespace,
+                             reps=modulecnt
                              cutoff=conf.fa_cutoff)
 
     # Lets label the info for each GO term, shall we?
