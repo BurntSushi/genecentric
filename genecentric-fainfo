@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python2
 '''
 'genecentric-fainfo' is a simple interface to access information about the
 species and namespaces supported by Funcassociate 2.0.

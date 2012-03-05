@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python2
 '''
 'genecentric-bpms' is a script that generates a set of between-pathway modules 
 in BPM file format.
