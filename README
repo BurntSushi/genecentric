@@ -50,6 +50,15 @@ package. (It should be installed to Python's installation prefix, typically
 '/usr' on *nix based machines. If on Windows, it may be in your Python 
 distribution folder.)
 
+If you can't find the data on your system, you can download it here:
+http://bcb.cs.tufts.edu/genecentric/files/data/
+Remember, this is Yeast EMAP data from the Krogan Lab. You may want to find
+your own data if this data isn't applicable. To see where we got this example
+data from, see:
+http://bcb.cs.tufts.edu/genecentric/files/data/README
+
+Back to the example:
+
   export DATA="/usr/share/genecentric/data/"
   genecentric-bpms -m 20 -e $DATA/essentials $DATA/yeast_emap.gi output.bpm
 
