@@ -13,7 +13,7 @@ def functionate(genes, modulecnt):
                              species=conf.fa_species, 
                              namespace=conf.fa_namespace,
                              genespace=genespace,
-                             reps=modulecnt
+                             reps=modulecnt,
                              cutoff=conf.fa_cutoff)
 
     # Lets label the info for each GO term, shall we?
