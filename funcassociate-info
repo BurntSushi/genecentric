@@ -1,4 +1,8 @@
 #!/usr/bin/env python2.7
+'''
+'funcassociate-info' is a simple interface to access information about the
+species and namespaces supported by Funcassociate 2.0.
+'''
 
 import sys
 

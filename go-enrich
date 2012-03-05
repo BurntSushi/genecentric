@@ -1,4 +1,8 @@
 #!/usr/bin/env python2.7
+'''
+'go-enrich' takes a BPM file as input and outputs a set of GO enrichment results
+for every module in the BPM file.
+'''
 
 from functools import partial
 
