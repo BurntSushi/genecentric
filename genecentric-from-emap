@@ -1,0 +1,48 @@
+#!/usr/bin/env python2
+'''
+'genecentric-from-emap' takes an emap file as input and converts it into the
+format understood by 'genecentric'. Namely, a tab-delimited file with three
+columns: gene1, gene2 and interaction score.
+'''
+import argparse
+import csv
+
+parser = argparse.ArgumentParser(
+    description='Convert EMAP files to Genecentric input files',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('emap', type=str,
+   metavar='INPUT_EMAP_FILE', help='Location of the EMAP file.')
+aa('gi', type=str,
+   metavar='OUTPUT_GI_FILE',
+   help='Where the genetic interaction file will be written')
+aa('--delimiter', dest='delimiter', default='\t',
+   help='The delimiter of the CSV file.')
+aa('--no-header', dest='no_header', action='store_true',
+   help='If set, do not ignore the first line.')
+aa('--g1-name', dest='g1_name', type=int, default=0,
+   help='The column number of the first gene name.')
+aa('--g2-name', dest='g2_name', type=int, default=3,
+   help='The column number of the second gene name.')
+aa('--g1-allele', dest='g1_allele', type=int, default=2,
+   help='The column number of the first gene allele value.')
+aa('--g2-allele', dest='g2_allele', type=int, default=5,
+   help='The column number of the second gene allele value.')
+aa('--int-score', dest='int_score', type=int, default=6,
+   help='The column number of the genetic interaction score.')
+conf = parser.parse_args()
+
+reader = csv.reader(open(conf.emap), delimiter=conf.delimiter)
+writer = csv.writer(open(conf.gi, 'w+'), delimiter='\t')
+
+# If an interaction score is not the result of a deletion/deletion event,
+# it is excluded from the set of genes used.
+for i, row in enumerate(reader):
+    if i == 0 and not conf.no_header: # there IS a header
+        continue
+
+    if row[conf.g1_allele] != 'deletion' or row[conf.g2_allele] != 'deletion':
+        continue
+
+    writer.writerow([row[conf.g1_name], row[conf.g2_name], row[conf.int_score]])
+
