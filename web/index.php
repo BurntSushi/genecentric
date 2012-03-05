@@ -1,6 +1,6 @@
 <?php
 
-echo "Hey {$_SERVER['REMOTE_ADDR']}"
+echo "Hey there {$_SERVER['REMOTE_ADDR']}"
 
 ?>
 
