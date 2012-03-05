@@ -1,0 +1,5 @@
+This directory contains a series of tests that analyzes GO enrichment output.
+
+They are not intended for public consumption. Indeed, they rely on unreleased 
+code. They are in this repository for convenience.
+
