@@ -3,6 +3,18 @@ import sys
 from bpm import conf, geneinter, faclient
 
 def functionate(genes, modulecnt):
+    '''
+    Sends a geneset to Funcassociate and returns its Go enrichment results.
+
+    Handles a lot of the nastiness of parsing the return results. Namely,
+    using the entity attribute table to actually get the names of genes that
+    correspond to each GO enrichment.
+
+    :param genes: A set of gene identifiers.
+    :param modulecnt: The total number of modules in the BPM file. This
+                      corresponds to the 'reps' (reptitions) Funcassociate
+                      parameter.
+    '''
     if conf.fa_genespace:
         genespace = list(geneinter.genespace)
     else:

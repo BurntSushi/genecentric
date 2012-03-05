@@ -3,6 +3,16 @@ import re
 from bpm import conf, faread, parallel
 
 def enrich(modulecnt, (bpmi, modi, genes)):
+    '''
+    Initiates a request to Funcassociate and returns a dictionary of goterms.
+
+    :param modulecnt: The total number of modules in the BPM file.
+    :param (bpmi, modi, genes): A tuple representing a module. 'bpmi' is the
+                                BPM index number, 'modi' is the module index
+                                number, and 'genes' is a list of gene names
+                                in the module.
+    :return: A four-tuple of the input module and its associated go terms.
+    '''
     goterms = faread.functionate(genes, modulecnt)
 
     parallel.inc_counter()
@@ -11,6 +21,10 @@ def enrich(modulecnt, (bpmi, modi, genes)):
     return bpmi, modi, genes, goterms
 
 def sortgo(goterms):
+    '''
+    Sorts the keys of a goterms dictionary according to the current
+    configuration.
+    '''
     reverse = True if conf.order_go == 'desc' else False
 
     if conf.sort_go_by == 'p':
@@ -28,6 +42,16 @@ def sortgo(goterms):
     assert False, 'Invalid sort by column.'
 
 def read_bpm(bpmtext):
+    '''
+    Parses raw BPM text (everything between the '>' and '>') from a gobpm file,
+    and turns it into a goterms dictionary keyed by GO accession.
+
+    The fields in each dictionary entry represent the GO information returned
+    by Funcassociate. Namely, a p-value, the number of genes in the module
+    with the same enrichment, the number of genes in the query, the name of the 
+    GO term, and finally, the names of the genes in the query with the
+    corresponding GO enrichment.
+    '''
     lines = map(str.strip, bpmtext.splitlines())
 
     bpmids = lines[0]
@@ -63,6 +87,9 @@ def read_bpm(bpmtext):
     return bpmi, modi, genes, goterms
 
 def write_bpm(out, bpmi, modi, genes, goterms):
+    '''
+    Writes a BPM entry with GO enrichment information in gobpm file format.
+    '''
     obpm = ['> BPM%d/Module%d' % (bpmi, modi)]
     obpm.append('\t'.join(genes))
 
