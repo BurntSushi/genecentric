@@ -1,0 +1,43 @@
+INTRO
+=====
+This is an extremely naive web site implementation. It was built to maintain
+a small set of pages, a user guide, and some feeble support for counting how 
+many times people download our code.
+
+It uses the 'tried and true' approach of encapsulating HTML in header and 
+footer PHP files, and the content files are simply structured like so:
+
+  <?php require_once('includes/header.php'); ?>
+
+  <!-- HTML for specific content here -->
+
+  <?php require_once('includes/footer.php'); ?>
+
+It isn't pretty, but it will work for a small web site.
+
+BUILD PROCESS
+=============
+When the genecentric repository is pushed to Tufts, there is a post-receive 
+hook that checks out the current master tree, copies the contents of the 'web' 
+directory into /r/bcb/public_html/genecentric, and manually updates the 'files' 
+and 'docs' directories using my local machine.
+
+The general process is OK, but the details need to be changed. (i.e., stop 
+relying on my local machine.)
+
+
+THINGS THAT ARE BUT SHOULD NOT BE
+=================================
+The 'docs' directory is automatically copied from my local machine. It is built 
+whenever I manually tell it to build.
+
+Distributions are manually built. They should be automatically built by 
+checking out a tag of the repository.
+
+The 'files/data' directory was populated manually, once. It should be 
+auto-updated.
+
+The 'download stats' are kept in /r/bcb/genecentric/download-{linux,win}. It is 
+an extremely simple approach that is only meant to give us a "general idea." 
+Use Google Analytics for the rest.
+
