@@ -1,3 +1,7 @@
+'''
+'funcassociateinfo.py' sets up the command line arguments for the 
+'genecentric-fainfo' program.
+'''
 import sys
 
 import bpm
