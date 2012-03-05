@@ -1,12 +1,13 @@
 #!/usr/bin/env python2.7
 '''
-'go-enrich' takes a BPM file as input and outputs a set of GO enrichment results
+'genecentric-go' takes a BPM file as input and outputs a set of GO enrichment 
+results
 for every module in the BPM file.
 '''
 
 from functools import partial
 
-import bpm.cmdargs.goenrich # Which command line arguments do we want?
+import bpm.cmdargs.go # Which command line arguments do we want?
 from bpm import bpmreader, conf, emap, enrichment, parallel
 
 parallel.costs['load_genes'] = 10

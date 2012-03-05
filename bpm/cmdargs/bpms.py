@@ -1,3 +1,11 @@
+'''
+'bpms.py' sets up the command line arguments for the 'genecentric-bpms'
+program.
+
+It can do quite a few things in parallel (like generating random bipartitions),
+so this module also does some preprocessing to setup sane defaults for
+parallelization.
+'''
 import argparse
 import multiprocessing as mp
 
@@ -14,9 +22,9 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 aa = parser.add_argument
 aa('emap', type=str,
-   metavar='EMAP_FILE', help='Location of the EMAP file.')
+   metavar='INPUT_EMAP_FILE', help='Location of the EMAP file.')
 aa('bpm', type=str,
-   metavar='BPM_FILE', help='Where the BPM output will be written.')
+   metavar='OUTPUT_BPM_FILE', help='Where the BPM output will be written.')
 aa('-e', '--essential-list', dest='essentials', type=str, default=None,
    metavar='ESSENTIAL_FILE',
    help='The location of an essential gene list file. (One gene per line.) '

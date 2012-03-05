@@ -1,12 +1,12 @@
 #!/usr/bin/env python2.7
 '''
-'mkbpms' is a script that generates a set of between-pathway modules in BPM 
-file format.
+'genecentric-bpms' is a script that generates a set of between-pathway modules 
+in BPM file format.
 '''
 
 import csv
 
-import bpm.cmdargs.mkbpms # Which command line arguments do we want?
+import bpm.cmdargs.bpms # Which command line arguments do we want?
 from bpm import conf, emap, parallel, partition, prune
 
 parallel.print_progress()

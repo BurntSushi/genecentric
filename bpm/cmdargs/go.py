@@ -1,3 +1,11 @@
+'''
+'go.py' sets up the command line arguments for the 'genecentric-go' 
+program.
+
+It can send requests to funcassociate in parallel, so include some
+preprocessing to determine sane defaults. (And don't let the user set the total
+number of parallel process too high; we want to be nice to Funcassociate.)
+'''
 import argparse
 import multiprocessing as mp
 
@@ -18,11 +26,11 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 aa = parser.add_argument
 aa('emap', type=str,
-   metavar='EMAP_FILE', help='Location of the EMAP file.')
+   metavar='INPUT_EMAP_FILE', help='Location of the EMAP file.')
 aa('bpm', type=str,
-   metavar='BPM_FILE', help='Location of the BPM file.')
+   metavar='INPUT_BPM_FILE', help='Location of the BPM file.')
 aa('enrichment', type=str,
-   metavar='ENRICHMENT_FILE', help='Output file for GO enrichment.')
+   metavar='OUTPUT_ENRICHMENT_FILE', help='Output file for GO enrichment.')
 aa('-e', '--essential-list', dest='essentials', type=str, default=None,
    metavar='ESSENTIAL_FILE',
    help='The location of an essential gene list file. (One gene per line.) '
