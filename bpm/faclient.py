@@ -116,11 +116,12 @@ class _fc(object):
         if self.timeout > 0:
             signal.alarm(self.timeout)
         try:
-            response = conn.getresponse()
-            signal.alarm(0)
-        except TimeoutError:
-            signal.alarm(0)
-            raise TimeoutError("Request to %s timed out" % self.host)
+            try:
+                response = conn.getresponse()
+                signal.alarm(0)
+            except TimeoutError:
+                signal.alarm(0)
+                raise TimeoutError("Request to %s timed out" % self.host)
         finally:
             signal.signal(signal.SIGALRM, hold)
 
@@ -140,7 +141,10 @@ class _fc(object):
         # we disregard the first argument, self; hence the decrement
         # by 1 below
         max_ = len(formals) - 1
-        min_ = max_ if defaults is None else max_ - len(defaults)
+        if defaults is None:
+            min_ = max_
+        else:
+            min_ = max_ - len(defaults)
         qual = None
 
         if given < min_:
@@ -148,7 +152,10 @@ class _fc(object):
                 qual = "at least %d" % min_
             else:
                 qual = "exactly %d" % min_
-            s = "s" if min_ > 1 else ""
+            if min_ > 1:
+                s = "s"
+            else:
+                s = ""
         elif given > max_:
             if max_ > min_:
                 qual = "at most %d" % max_
@@ -156,7 +163,10 @@ class _fc(object):
                 qual = "exactly %d" % max_
             else:
                 qual = "no"
-            s = "" if max_ == 1 else "s"
+            if max_ == 1:
+                s = ""
+            else:
+                s = "s"
         
         if qual is not None:
             raise TypeError("%s() takes %s "
