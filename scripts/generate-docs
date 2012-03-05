@@ -1,0 +1,13 @@
+#!/bin/sh
+
+outputFormat="--html"
+
+if [ -n "$1" ]; then
+  outputFormat="--$1"
+fi
+
+rm -rf docs/*
+cp README docs/
+epydoc --docformat restructuredtext -v $outputFormat --name genecentric \
+  -o ./docs/ bpm
+
