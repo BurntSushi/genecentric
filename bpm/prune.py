@@ -1,3 +1,7 @@
+'''
+'prune.py' provides all the functions required to prune a set of BPMs after
+they have been generated.
+'''
 from functools import partial
 from itertools import combinations, product
 

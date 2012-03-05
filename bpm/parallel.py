@@ -1,3 +1,8 @@
+"""
+'parallel.py' is a set of functions that make parallelizing functions much 
+easier. Namely, a 'pmap' function that will use the single-threaded version if 
+parallelization isn't available.
+"""
 import math
 import multiprocessing as mp
 import sys

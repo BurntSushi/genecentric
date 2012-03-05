@@ -1,21 +1,3 @@
-# -*- mode: python -*-
-################################################################
-# funcassociate/client.py
-#
-# Copyright (c) 2010 President and Fellows of Harvard College
-# and Gabriel F. Berriz (gberriz@hms.harvard.edu).  All rights
-# reserved.
-################################################################
-
-import re
-import signal
-import socket
-from inspect import getargspec
-
-import httplib
-
-import json
-
 """
 A client class for the FuncAssociate web service at
 
@@ -35,6 +17,24 @@ This module is distributed as "The Program" under the Harvard
 University End-User License Agreement.
 http://llama.mshri.on.ca/license.html.
 """
+
+# -*- mode: python -*-
+################################################################
+# funcassociate/client.py
+#
+# Copyright (c) 2010 President and Fellows of Harvard College
+# and Gabriel F. Berriz (gberriz@hms.harvard.edu).  All rights
+# reserved.
+################################################################
+
+import re
+import signal
+import socket
+from inspect import getargspec
+
+import httplib
+
+import json
 
 # -----------------------------------------------------------------------------
 

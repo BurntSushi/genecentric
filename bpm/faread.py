@@ -1,3 +1,7 @@
+'''
+'faread.py' is a wrapper around 'faclient.py' that handles the nastiness of
+the data we get back.
+'''
 import sys
 
 from bpm import conf, geneinter, faclient

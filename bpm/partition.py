@@ -1,7 +1,10 @@
+'''
+'partition.py' is a module that parallelizes the process of partitioning random
+sets of genes.
+'''
 import random
 
 from bpm import conf, geneinter, parallel
-from bpm import debug
 
 # See notes in 'bpms' for why this is global.
 happyparts = None

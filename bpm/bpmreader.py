@@ -1,3 +1,6 @@
+'''
+Provides a function to read and parse a BPM file into a nice data structure.
+'''
 import csv
 import os
 import sys

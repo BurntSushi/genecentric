@@ -1,3 +1,7 @@
+'''
+enrichment.py provides functions for gathering, reading, writing and sorting
+GO enrichment information from Funcassociate.
+'''
 import re
 
 from bpm import conf, faread, parallel
@@ -7,7 +11,7 @@ def enrich(modulecnt, (bpmi, modi, genes)):
     Initiates a request to Funcassociate and returns a dictionary of goterms.
 
     :param modulecnt: The total number of modules in the BPM file.
-    :param (bpmi, modi, genes): A tuple representing a module. 'bpmi' is the
+    :param bpmi, modi, genes: A tuple representing a module. 'bpmi' is the
                                 BPM index number, 'modi' is the module index
                                 number, and 'genes' is a list of gene names
                                 in the module.
