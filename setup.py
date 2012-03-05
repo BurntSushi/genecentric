@@ -12,6 +12,14 @@ except:
     print 'You should be able to install it on older versions from PyPI.'
     sys.exit(1)
 
+try:
+    import json
+except:
+    print ''
+    print 'Genecentric requires the "json" module which became ',
+    print 'available in Python 2.6.'
+    sys.exit(1)
+
 setup(
     name = 'genecentric',
     author = 'Andrew Gallant',
