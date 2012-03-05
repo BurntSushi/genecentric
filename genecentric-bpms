@@ -7,14 +7,14 @@ in BPM file format.
 import csv
 
 import bpm.cmdargs.bpms # Which command line arguments do we want?
-from bpm import conf, emap, parallel, partition, prune
+from bpm import conf, geneinter, parallel, partition, prune
 
 parallel.print_progress()
 
-emap.load_genes() # Creates global variables emap.genes and emap.gis
+geneinter.load_genes() # Creates global vars geneinter.genes and geneinter.gis
 
 # Calculate the total number of steps so we can measure progress
-parallel.steps = conf.M + emap.genecount() + sum(parallel.costs.values())
+parallel.steps = conf.M + geneinter.genecount() + sum(parallel.costs.values())
 
 # Create a BPM from every gene and then prune them
 bpms = partition.bpms()

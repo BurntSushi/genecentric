@@ -8,12 +8,12 @@ for every module in the BPM file.
 from functools import partial
 
 import bpm.cmdargs.go # Which command line arguments do we want?
-from bpm import bpmreader, conf, emap, enrichment, parallel
+from bpm import bpmreader, conf, geneinter, enrichment, parallel
 
 parallel.costs['load_genes'] = 10
 parallel.print_progress()
 
-emap.load_genes() # Creates global variables emap.genes and emap.gis
+geneinter.load_genes() # Creates global vars geneinter.genes and geneinter.gis
 bpms = bpmreader.read(conf.bpm)
 
 # Calculate the total number of steps so we can measure progress

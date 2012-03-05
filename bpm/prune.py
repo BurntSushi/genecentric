@@ -1,7 +1,7 @@
 from functools import partial
 from itertools import combinations, product
 
-from bpm import conf, emap, parallel
+from bpm import conf, geneinter, parallel
 
 def prune(bpms):
     '''
@@ -49,7 +49,7 @@ def interweight((A, B)):
     opposed to using a higher order function with 'sorted'.)
     '''
     # For converting a tuple to two arguments
-    gitup = lambda (g1, g2): emap.gi(g1, g2)
+    gitup = lambda (g1, g2): geneinter.gi(g1, g2)
 
     def sum_within(S):
         return sum(map(gitup, combinations(S, 2)))

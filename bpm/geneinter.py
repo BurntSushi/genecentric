@@ -1,3 +1,6 @@
+'''
+'geneint.py' is the module that processes the genetic interaction input file.
+'''
 from collections import defaultdict
 import csv
 
@@ -16,13 +19,11 @@ def load_genes():
     There is some criteria for excluding genes from this process:
     1) If an essential gene list file is provided, any gene in that file
        is excluded from the set of genes used.
-    2) If an interaction score is not the result of a deletion/deletion event,
-       it is excluded from the set of genes used.
-    3) If an interaction score is missing or zero, it is *KEPT* in the set of
+    2) If an interaction score is missing or zero, it is *KEPT* in the set of
        genes used to generate BPMs with an interaction score of 0.
 
-    This gene information is then available at the 'emap' module level, since
-    they are both used pervasively throughout BPM generation.
+    This gene information is then available at the 'geneint' module level, 
+    since they are both used pervasively throughout BPM generation.
 
     Finally, if we add the gene pair (g1, g2) with score S to the dictionary,
     then we'll also add (g2, g1) with score S to the dictionary. This increases
@@ -34,8 +35,8 @@ def load_genes():
         for line in open(conf.essentials):
             essentials.add(line.strip())
 
-    for row in csv.DictReader(open(conf.emap), delimiter='\t'):
-        g1, g2 = row['ft1_systematic_name'], row['ft2_systematic_name']
+    for row in csv.reader(open(conf.geneinter), delimiter='\t'):
+        g1, g2, intscore = row[0], row[1], row[2]
 
         genespace.add(g1)
         genespace.add(g2)
@@ -44,13 +45,9 @@ def load_genes():
         if g1 in essentials or g2 in essentials:
             continue
 
-        # Only use interaction scores from a deletion/deletion event
-        if row['ft1_allele'] != 'deletion' or row['ft2_allele'] != 'deletion':
-            continue
-
         # If there is no interaction score, force it to be 0
         try:
-            ginter = float(row['int_score'])
+            ginter = float(intscore)
         except ValueError:
             ginter = 0.0
 
@@ -79,7 +76,7 @@ def genecount():
     if not numgenes:
         numgenes = len(genes)
 
-    assert numgenes > 0, 'emap.load_genes must be called first'
+    assert numgenes > 0, 'geneint.load_genes must be called first'
 
     return numgenes
 

@@ -1,7 +1,7 @@
 import bpm
 
 class __Config:
-    emap = None
+    geneinter = None
     bpm = None
     verbose = None
 

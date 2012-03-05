@@ -25,8 +25,8 @@ parser = argparse.ArgumentParser(
     description='GO enrichment for BPMs',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 aa = parser.add_argument
-aa('emap', type=str,
-   metavar='INPUT_EMAP_FILE', help='Location of the EMAP file.')
+aa('geneinter', type=str,
+   metavar='INPUT_GENETIC_INTERACTION_FILE', help='Location of the GI file.')
 aa('bpm', type=str,
    metavar='INPUT_BPM_FILE', help='Location of the BPM file.')
 aa('enrichment', type=str,
@@ -73,7 +73,7 @@ aa('--fa-cutoff', dest='fa_cutoff', type=float, default=0.05,
    help='The p-value cutoff for GO enrichment to be used with Funcassociate. '
         'It should be in the interval (0, 1].')
 aa('--fa-genespace', dest='fa_genespace', action='store_true',
-   help='If set, the set of genes from the provided EMAP file will be sent '
+   help='If set, the set of genes from the provided GI file will be sent '
         'as the genespace to Funcassociate. Otherwise, the default species '
         'genespace will be used.')
 
@@ -91,7 +91,7 @@ if conf.processes > __cpus:
     conf.processes = __cpus
 
 # Nice error messages if files don't exist...
-assert_read_access(conf.emap)
+assert_read_access(conf.geneinter)
 assert_read_access(conf.bpm)
 if conf.essentials: # optional file
     assert_read_access(conf.essentials)

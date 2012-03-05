@@ -1,10 +1,10 @@
 import sys
 
-from bpm import conf, emap, faclient
+from bpm import conf, geneinter, faclient
 
 def functionate(genes, modulecnt):
     if conf.fa_genespace:
-        genespace = list(emap.genespace)
+        genespace = list(geneinter.genespace)
     else:
         genespace = None
 

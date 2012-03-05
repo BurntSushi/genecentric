@@ -21,8 +21,8 @@ parser = argparse.ArgumentParser(
     description='BPM generator',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 aa = parser.add_argument
-aa('emap', type=str,
-   metavar='INPUT_EMAP_FILE', help='Location of the EMAP file.')
+aa('geneinter', type=str,
+   metavar='INPUT_GENETIC_INTERACTION_FILE', help='Location of the GI file.')
 aa('bpm', type=str,
    metavar='OUTPUT_BPM_FILE', help='Where the BPM output will be written.')
 aa('-e', '--essential-list', dest='essentials', type=str, default=None,
@@ -65,7 +65,7 @@ if conf.processes > __cpus:
     conf.processes = __cpus
 
 # Do some error checking on file inputs...
-assert_read_access(conf.emap)
+assert_read_access(conf.geneinter)
 if conf.essentials > 0: # essentials list is optional
     assert_read_access(conf.essentials)
 

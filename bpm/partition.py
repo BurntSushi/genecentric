@@ -1,6 +1,6 @@
 import random
 
-from bpm import conf, emap, parallel
+from bpm import conf, geneinter, parallel
 from bpm import debug
 
 # See notes in 'bpms' for why this is global.
@@ -19,7 +19,7 @@ def bpms():
     global happyparts, counter
 
     happyparts = parallel.pmap(localmaxcut, xrange(0, conf.M))
-    return parallel.pmap(group_genes, enumerate(emap.genes))
+    return parallel.pmap(group_genes, enumerate(geneinter.genes))
 
 def group_genes((i, g1)):
     '''
@@ -33,7 +33,7 @@ def group_genes((i, g1)):
 
     mod1, mod2 = [], []
 
-    for g2 in emap.genes:
+    for g2 in geneinter.genes:
         # Count the number of times g2 is in the same set as g2
         freqsame = sum([1 for A, B in happyparts
                           if (g1 in A and g2 in A) or (g1 in B and g2 in B)])
@@ -70,15 +70,15 @@ def localmaxcut(m):
         'same' and 'other'.
         '''
         ws = { 'same': 0, 'other': 0 }
-        for g2 in emap.genes:
-            w = emap.gi(g1, g2)
+        for g2 in geneinter.genes:
+            w = geneinter.gi(g1, g2)
             if same_set(g1, g2):
                 ws['same'] += w
             else:
                 ws['other'] += w
         return ws
 
-    nweights = { g: weights(g) for g in emap.genes }
+    nweights = { g: weights(g) for g in geneinter.genes }
     unhappy = get_unhappy(nweights)
 
     while unhappy:
@@ -105,7 +105,7 @@ def localmaxcut(m):
 
             # The interaction score between this gene and the gene that
             # was made happy.
-            w = emap.gi(v, g) 
+            w = geneinter.gi(v, g) 
 
             # If the two genes are now in the same set, then 'g' gets a boost
             # to its happiness. Otherwise, 'g' becomes more unhappy.
@@ -134,10 +134,10 @@ def get_unhappy(nweights):
 
 def random_bipartition():
     '''
-    Creates two random sets of genes from the emap data.
+    Creates two random sets of genes from the genetic interaction data.
     '''
     A, B = set(), set()
-    for g in emap.genes:
+    for g in geneinter.genes:
         if random.random() < 0.5:
             A.add(g)
         else:
