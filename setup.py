@@ -24,8 +24,8 @@ setup(
     packages = ['bpm', 'bpm/cmdargs'],
     data_files = [
         ('share/genecentric/doc', ['README', 'LICENSE']),
-        ('share/genecentric/data', ['data/chrombio.csv', 'data/essentials',
-                                    'data/yeast_emap.gi', 'data/README']),
+        ('share/genecentric/data', ['data/essentials', 'data/yeast_emap.gi',
+                                    'data/README']),
     ],
     scripts = ['genecentric-bpms', 'genecentric-fainfo',
                'genecentric-from-emap', 'genecentric-go']
