@@ -65,6 +65,9 @@ OTHER NOTES
 
 Some terminology on file formats used by Genecentric:
 
+It is convention to use the file format names on the left as extensions to
+corresponding files. i.e., 'yeast_emap.gi'. This is not required, however.
+
   gi      A 'genetic interaction' file is formatted as tab-delimited with three 
           columns. The first column contains the first gene name, the second 
           column contains the second gene name, and the third column contains 
