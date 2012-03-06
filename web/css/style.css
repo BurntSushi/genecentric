@@ -76,10 +76,16 @@ p {
   margin-top: 0;
 }
 
-code {
+.code, code {
+  font-family: monospace;
   background: #dfdcdf;
   border: 1px solid #000;
+  padding: 1px;
+}
+
+code {
+  display: block;
   padding: 5px;
-  font-family: monospace;
+:qa
 }
 
