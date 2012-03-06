@@ -21,6 +21,16 @@
     <h1>Genecentric</h1>
     <h2>A package to uncover graph-theoretic structure in high-throughput
         epistasis data.</h2>
+
+    <ul>
+      <li><a href="download.php">Download</a></li>
+      <li><a href="install.php">Installation</a></li>
+      <li><a href="examples.php">Examples</a></li>
+      <li><a href="doc.php">Documentation</a></li>
+      <li><a href="docs/">Code Documentation</a></li>
+    </ul>
+
+    <hr>
   </header>
   <div role="main">
 

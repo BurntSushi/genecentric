@@ -1,2 +1,46 @@
+body {
+  margin: 20px
+}
 
+h1 {
+  margin-bottom: 0;
+  font-size: 180%;
+}
+
+h2 {
+  margin: 0;
+  font-size: 150%;
+}
+
+header {
+  display: block;
+  clear: both;
+}
+
+header ul {
+  margin: 10px 0 10px 0;
+  padding: 0;
+}
+
+  header ul li {
+    float: left;
+    display: block;
+    margin: 0 50px 10px 0;
+  }
+
+header hr, footer hr {
+  clear: both;
+  background-color: #7AA0C5;
+  /* width: 10px; */
+  height: 3px;
+  margin: 0 0 5px 0;
+}
+
+footer p {
+  margin: 0;
+}
+
+.citation {
+  margin-top: 10px;
+}
 
