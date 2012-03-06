@@ -1,15 +1,43 @@
 body {
-  margin: 20px
+  background: #ADAAAD;
+}
+
+a {
+  color: #4578AB;
+  font-weight: bold;
+}
+
+a:hover {
+  color: #AB8043;
+}
+
+div#container {
+  width: 900px;
+  margin: 0 auto;
+  padding: 10px;
+  background: #fff;
 }
 
 h1 {
-  margin-bottom: 0;
+  margin: 0;
   font-size: 180%;
 }
 
 h2 {
   margin: 0;
   font-size: 150%;
+}
+
+h3 {
+  font-size: 150%;
+}
+
+h4 {
+  font-size: 130%;
+}
+
+h3, h4 {
+  margin-bottom: 0;
 }
 
 header {
@@ -25,7 +53,7 @@ header ul {
   header ul li {
     float: left;
     display: block;
-    margin: 0 50px 10px 0;
+    margin: 0 35px 10px 0;
   }
 
 header hr, footer hr {
@@ -33,7 +61,7 @@ header hr, footer hr {
   background-color: #7AA0C5;
   /* width: 10px; */
   height: 3px;
-  margin: 0 0 5px 0;
+  margin: 30px 0 5px 0;
 }
 
 footer p {
@@ -42,5 +70,16 @@ footer p {
 
 .citation {
   margin-top: 10px;
+}
+
+p {
+  margin-top: 0;
+}
+
+code {
+  background: #dfdcdf;
+  border: 1px solid #000;
+  padding: 5px;
+  font-family: monospace;
 }
 
