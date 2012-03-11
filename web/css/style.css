@@ -1,5 +1,5 @@
 body {
-  background: #ADAAAD;
+  background: #cbccd3;
 }
 
 a {
@@ -20,7 +20,7 @@ div#container {
 
 h1 {
   margin: 0;
-  font-size: 180%;
+  font-size: 200%;
 }
 
 h2 {
@@ -78,7 +78,7 @@ p {
 
 .code, code {
   font-family: monospace;
-  background: #dfdcdf;
+  background: #f6f3f6;
   border: 1px solid #000;
   padding: 1px;
 }
@@ -86,6 +86,5 @@ p {
 code {
   display: block;
   padding: 5px;
-:qa
 }
 
