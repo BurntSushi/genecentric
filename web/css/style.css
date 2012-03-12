@@ -12,7 +12,7 @@ a:hover {
 }
 
 div#container {
-  width: 900px;
+  width: 800px;
   margin: 0 auto;
   padding: 10px;
   background: #fff;
@@ -85,6 +85,12 @@ p {
 
 code {
   display: block;
-  padding: 5px;
+  padding: 0.5em;
+}
+
+code.command {
+  padding: 0.5em 0.5em 0.5em 7em;
+  text-indent: -6.5em;
+  line-height: 1.7em;
 }
 
