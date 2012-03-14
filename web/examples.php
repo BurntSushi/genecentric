@@ -68,7 +68,8 @@ require_once('includes/command_writer.php');
 <p>Let's use <?=code('Homo sapiens')?> as our example. While we now know that
    Funcassociate supports the species <?=code('Homo sapiens')?>, we still need
    to tell Funcassociate which namespace to use (this depends on the kind of
-   gene identifiers in your BPMs). We can query Funcassociate for the
+   gene identifiers in your genetic interaction data).
+   We can query Funcassociate for the
    available namespaces for <?=code('Homo sapiens')?> like so:</p>
 <?=cmd('genecentric-fainfo namespaces \'Homo sapiens\'')?>
 <p>Which should give some output like the following:</p>
