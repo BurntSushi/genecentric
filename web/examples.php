@@ -40,7 +40,7 @@ require_once('includes/command_writer.php');
    <?=code(gobpm('enrichment'))?> file.</p>
 
 <h4 id="noprune">Generate BPMs without pruning</h4>
-<p>This example generates BPMs with no pruning whatsover. Namely, the number
+<p>This example generates BPMs with no pruning whatsoever. Namely, the number
    of BPMs produced will equal the number of unique genes in the genetic
    interaction data.</p>
 <?=cmd('genecentric-bpms -e essentials ' .
