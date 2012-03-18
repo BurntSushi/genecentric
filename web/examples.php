@@ -33,11 +33,11 @@ require_once('includes/command_writer.php');
 <p>To generate BPMs:</p>
 <?=cmd('genecentric-bpms -e essentials' . gi('yeast_emap') . bpm('output'))?>
 <p>And to perform GO enrichment on the BPMs in
-   <span class="code"><?=bpm('output')?></span>:</p>
+   <?=code(bpm('output'))?>:</p>
 <?=cmd('genecentric-go -e essentials' . gi('yeast_emap') . bpm('output') .
    gobpm('enrichment'))?>
 <p>GO enrichment results will now be in the
-   <span class="code"><?=gobpm('enrichment')?></span> file.</p>
+   <?=code(gobpm('enrichment'))?> file.</p>
 
 <h4 id="noprune">Generate BPMs without pruning</h4>
 <p>This example generates BPMs with no pruning whatsover. Namely, the number
