@@ -51,10 +51,11 @@ def load_genes():
         except ValueError:
             ginter = 0.0
 
-        if ginter < 0:
-            ginter = - (ginter ** 2)
-        else:
-            ginter = ginter ** 2
+        if conf.squaring:
+            if ginter < 0:
+                ginter = - (ginter ** 2)
+            else:
+                ginter = ginter ** 2
         gis[(g1, g2)] = ginter
         gis[(g2, g1)] = ginter
 

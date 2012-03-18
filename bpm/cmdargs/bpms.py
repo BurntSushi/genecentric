@@ -36,6 +36,9 @@ aa('-j', '--jaccard', dest='jaccard', type=float, default=0.66,
    metavar='JACCARD_INDEX', help='Jaccard Index threshold')
 aa('-m', '--num-bipartitions', dest='M', type=int, default=250,
    metavar='NUMBER_BIPARTITIONS', help='Number of bipartitions to generate')
+aa('--no-squaring', dest='squaring', action='store_false',
+   help='If set, genetic interaction scores will not be squared. '
+        'Squaring typically speeds convergence.')
 aa('--minimum-size', dest='min_size', type=int, default=3,
    metavar='MIN_SIZE', 
    help='Minimum size of BPM. Smaller BPMs are pruned. '
