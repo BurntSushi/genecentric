@@ -8,7 +8,7 @@
       implementation is automatically parallelized when more than one CPU is 
       present.</li>
   <li>Perform GO enrichment on generated BPMs using the JSON-RPC API of
-      Funcassociate 2.0.</li>
+      FuncAssociate 2.0.</li>
 </ol>
 <p>Genecentric is <a href="doc.php">completely configurable</a> via the command 
    line.</p>

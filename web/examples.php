@@ -9,6 +9,7 @@ require_once('includes/command_writer.php');
 <ul>
   <li><a href="#typical">A typical example</a></li>
   <li><a href="#noprune">Generate BPMs without pruning</a></li>
+  <li><a href="#genespace">Change the genespace used by FuncAssociate</a></li>
   <li><a href="#fainfo">Finding available species and namespaces for GO annotation</a></li>
 </ul>
 
@@ -50,11 +51,20 @@ require_once('includes/command_writer.php');
    options are used to prevent pruning of BPMs that are either too small or
    too big.</p>
 
+<h4 id="genespace">Change the genespace used by FuncAssociate</h4>
+<p>By default, Genecentric will tell FuncAssociate to use its default genespace
+   for the target species. In some instances, it may be desirable to specify
+   only the set of genes in the input genetic interaction file as the
+   genespace. This can be accomplished using the <?=code('--fa-genespace')?>
+   option:</p>
+<?=cmd('genecentric-go --fa-genespace '
+       . gi('yeast_emap') . bpm('output') . gobpm('enrichment'))?>
+
 <h4 id="fainfo">Finding available species and namespaces for GO annotation</h4>
 <p>If you'd like to perform GO enrichment on BPMs generated with species other
    than Saccharomyces cereivisiae, the defaults built into
    <?=code('genecentric-go')?> will need to be overwritten.</p>
-<p>But first, we have to ask Funcassociate which species it supports:</p>
+<p>But first, we have to ask FuncAssociate which species it supports:</p>
 <?=cmd('genecentric-fainfo species')?>
 <p>Which should give some output like the following:</p>
 <p><code>
@@ -66,10 +76,10 @@ require_once('includes/command_writer.php');
   Vibrio cholerae
 </code></p>
 <p>Let's use <?=code('Homo sapiens')?> as our example. While we now know that
-   Funcassociate supports the species <?=code('Homo sapiens')?>, we still need
-   to tell Funcassociate which namespace to use (this depends on the kind of
+   FuncAssociate supports the species <?=code('Homo sapiens')?>, we still need
+   to tell FuncAssociate which namespace to use (this depends on the kind of
    gene identifiers in your genetic interaction data).
-   We can query Funcassociate for the
+   We can query FuncAssociate for the
    available namespaces for <?=code('Homo sapiens')?> like so:</p>
 <?=cmd('genecentric-fainfo namespaces \'Homo sapiens\'')?>
 <p>Which should give some output like the following:</p>
