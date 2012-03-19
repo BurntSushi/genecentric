@@ -45,12 +45,12 @@ require_once('includes/command_writer.php');
    of BPMs produced will equal the number of unique genes in the genetic
    interaction data.</p>
 <?=cmd('genecentric-bpms -e essentials ' .
-       '--no-prune --minimum-size 0 --maximum-size 0 ' .
+       '--no-jaccard --minimum-size 0 --maximum-size 0 ' .
        gi('yeast_emap') . bpm('notpruned'))?>
-<p>The <?=code('--no-prune')?> option is used to disable Jaccard-style pruning,
-   and the <?=code('--minimum-size 0')?> and <?=code('--maximum-size 0')?>
-   options are used to prevent pruning of BPMs that are either too small or
-   too big.</p>
+<p>The <?=code('--no-jaccard')?> option is used to disable Jaccard-style 
+   pruning, and the <?=code('--minimum-size 0')?> and
+   <?=code('--maximum-size 0')?> options are used to prevent pruning of BPMs 
+   that are either too small or too big.</p>
 
 <h4 id="genespace">Change the genespace used by FuncAssociate</h4>
 <p>By default, Genecentric will tell FuncAssociate to use its default genespace
@@ -111,7 +111,7 @@ require_once('includes/command_writer.php');
    which columns have the gene identifier information and which column
    has the genetic interaction score.</p>
 <p>There is more information about <?=code('genecentric-from-emap')?> and some
-   advice on what to do if your have other kinds of data in the
+   advice on what to do if you have other kinds of data in the
    <a href="doc.php#genecentric-from-emap">documentation for 
    <?=code('genecentric-from-emap')?></a>.</p>
 
