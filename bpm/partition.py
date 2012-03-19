@@ -1,6 +1,7 @@
 '''
 'partition.py' is a module that parallelizes the process of partitioning random
-sets of genes.
+sets of genes. This is where most of the complexity of Genecentric is,
+particularly in the 'localmaxcut' function.
 '''
 import random
 
@@ -19,7 +20,7 @@ def bpms():
     # for parallelism to be effective with 'group_genes'. I was currying
     # 'happyparts' with group_genes, but for whatever reason, this stopped
     # multiprocessing from keeping all of the cores hot.
-    global happyparts, counter
+    global happyparts
 
     happyparts = parallel.pmap(localmaxcut, xrange(0, conf.M))
     return parallel.pmap(group_genes, enumerate(geneinter.genes))
@@ -32,8 +33,6 @@ def group_genes((i, g1)):
     bipartitions C% of the time and the second module contains all genes
     that appeared in the opposite set in the M bipartitions C% of the time.
     '''
-    global counter
-
     mod1, mod2 = [], []
 
     for g2 in geneinter.genes:
@@ -55,11 +54,9 @@ def group_genes((i, g1)):
 def localmaxcut(m):
     '''
     Generates a random bipartition and makes the bipartition 'happy' by
-    applying 'Weighted-Flip' (from Cowen et al., 2011) until there are no
+    applying 'Weighted-Flip' (from Leiserson et al., 2011) until there are no
     unhappy genes left.
     '''
-    global counter
-
     A, B = random_bipartition()
 
     same_set = lambda g1, g2: (g1 in A and g2 in A) or (g1 in B and g2 in B)
@@ -70,7 +67,8 @@ def localmaxcut(m):
         set as g1 and the sum of interactions in the opposite set as g1.
 
         The tuple in this case is represented by a dictionary with keys
-        'same' and 'other'.
+        'same' and 'other'. I'm using a dictionary because the values need
+        to be mutable; they change as we move vertices between the partitions.
         '''
         ws = { 'same': 0, 'other': 0 }
         for g2 in geneinter.genes:
