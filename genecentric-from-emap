@@ -41,8 +41,10 @@ for i, row in enumerate(reader):
     if i == 0 and not conf.no_header: # there IS a header
         continue
 
-    if row[conf.g1_allele] != 'deletion' or row[conf.g2_allele] != 'deletion':
-        continue
+    if ((conf.g1_allele > -1 and conf.g2_allele > -1)
+         and (row[conf.g1_allele] != 'deletion'
+              or row[conf.g2_allele] != 'deletion')):
+            continue
 
     writer.writerow([row[conf.g1_name], row[conf.g2_name], row[conf.int_score]])
 
