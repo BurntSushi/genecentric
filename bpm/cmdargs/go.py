@@ -97,6 +97,9 @@ assert_read_access(conf.bpm)
 if conf.essentials: # optional file
     assert_read_access(conf.essentials)
 
+# We don't care about squaring when doing GO enrichment.
+conf.squaring = False
+
 # Set the global conf variable
 bpm.conf = conf
 
