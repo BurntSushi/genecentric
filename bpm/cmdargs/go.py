@@ -49,10 +49,11 @@ aa('-t', '--order-go', dest='order_go', type=str, default='asc',
    help='The order in which to sort GO enrichment. "asc" for ascending, '
         'and "desc" for descending.')
 aa('-p', '--processes', dest='processes', type=int, default=__default_cpus,
-   metavar='CPUs', help='The number of processes to run in parallel. If set to '
-                        '1, the multiprocessing module will not be used. '
-                        'You should also be nice to Funcassociate and not set '
-                        'this too high.')
+   metavar='PROCESSES',
+   help='The number of processes to run in parallel. If set to '
+        '1, the multiprocessing module will not be used. '
+        'You should also be nice to Funcassociate and not set '
+        'this too high.')
 aa('--hide-enriched-genes', dest='hide_enriched_genes', action='store_true',
    help='If set, the enriched genes for each GO term will not be written '
         'to the output file. This may (modestly) cut down on file size if '

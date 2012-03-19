@@ -17,7 +17,7 @@ aa('gi', type=str,
    metavar='OUTPUT_GI_FILE',
    help='Where the genetic interaction file will be written')
 aa('--delimiter', dest='delimiter', default='\t',
-   help='The delimiter of the CSV file.')
+   help='The delimiter of the CSV file. The default is a tab.')
 aa('--no-header', dest='no_header', action='store_true',
    help='If set, do not ignore the first line.')
 aa('--g1-name', dest='g1_name', type=int, default=0,

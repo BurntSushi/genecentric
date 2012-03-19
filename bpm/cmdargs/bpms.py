@@ -48,8 +48,9 @@ aa('--maximum-size', dest='max_size', type=int, default=25,
    help='Maximum size of BPM. Bigger BPMs are pruned. '
         'Set to 0 to disable.')
 aa('-p', '--processes', dest='processes', type=int, default=__cpus,
-   metavar='CPUs', help='The number of processes to run in parallel. If set to '
-                        '1, the multiprocessing module will not be used.')
+   metavar='PROCESSES',
+   help='The number of processes to run concurrently. If set to '
+        '1, the multiprocessing module will not be used.')
 aa('--no-prune', dest='pruning', action='store_false',
    help='If set, no pruning will occur. Note that --minimum-size and '
         '--maximum-size will still have an effect. Set those to 0 to '
