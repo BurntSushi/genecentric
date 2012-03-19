@@ -25,9 +25,11 @@ aa('--g1-name', dest='g1_name', type=int, default=0,
 aa('--g2-name', dest='g2_name', type=int, default=3,
    help='The column number of the second gene name.')
 aa('--g1-allele', dest='g1_allele', type=int, default=2,
-   help='The column number of the first gene allele value.')
+   help='The column number of the first gene allele value. '
+        'Set to -1 if your data does not have this information.')
 aa('--g2-allele', dest='g2_allele', type=int, default=5,
-   help='The column number of the second gene allele value.')
+   help='The column number of the second gene allele value. '
+        'Set to -1 if your data does not have this information.')
 aa('--int-score', dest='int_score', type=int, default=6,
    help='The column number of the genetic interaction score.')
 conf = parser.parse_args()
