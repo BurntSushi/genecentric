@@ -1,5 +1,4 @@
 
-  </div>
   <footer>
     <hr>
     <p>All source code is released under the <a href="LICENSE">GNU General 
@@ -15,6 +14,7 @@
          Submitted for publication.</p>
     </div>
   </footer>
+  </div></div>
 
   </div>
 </body>

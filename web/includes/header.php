@@ -20,7 +20,7 @@ $currentFile = "genecentric-1.0.0";
   <!-- <script src="js/libs/modernizr-2.5.3.min.js"></script> -->
 </head>
 <body>
-  <div id="container">
+  <div id="container"><div id="container2">
   <header>
     <h1>Genecentric</h1>
     <h2>A package to uncover graph-theoretic structure in high-throughput
