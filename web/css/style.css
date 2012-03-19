@@ -113,3 +113,11 @@ ul li ul {
   margin: 0 0 8px 0;
 }
 
+dl {
+  margin-bottom: 0;
+}
+
+  dl dd {
+    margin-bottom: 10px;
+  }
+
