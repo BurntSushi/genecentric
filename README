@@ -100,5 +100,5 @@ corresponding files. i.e., 'yeast_emap.gi'. This is not required, however.
           number of genes in the query associated with this GO term to the 
           total number of genes in the query, the GO name, and finally, the 
           subset of genes in the module that have been enriched for this GO 
-          term.
+          term. (The subset of genes is delimited by single space characters.)
 
