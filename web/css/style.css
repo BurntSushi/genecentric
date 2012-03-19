@@ -74,6 +74,7 @@ footer p {
 
 p {
   margin-top: 0;
+  line-height: 1.6em;
 }
 
 .code, code {
@@ -92,5 +93,9 @@ code.command {
   padding: 0.5em 0.5em 0.5em 7em;
   text-indent: -6.5em;
   line-height: 1.7em;
+}
+
+ul li ul {
+  margin: 0 0 8px 0;
 }
 
