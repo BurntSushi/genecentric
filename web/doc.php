@@ -96,8 +96,8 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
       computation. It is imperative that you specify the same value for
       <strong>ESSENTIAL_FILE</strong> for both the <?=$gc_bpms?> and
       <?=$gc_go?> command, particularly if you're using the
-      <?=code('--fa-genespace')?> option described below. The format of 
-      <strong>ESSENTIAL_FILE</strong> is simple: one gene identifier per 
+      <?=code('--fa-genespace')?> option in the <?=$gc_go?> command. The format 
+      of <strong>ESSENTIAL_FILE</strong> is simple: one gene identifier per 
       line.</dd>
 
   <dt><?=code('-c RATIO, --gene-ratio RATIO')?></dt>
@@ -120,7 +120,7 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
       gene in the set of genes in the
       <a href="#file-gi">genetic interaction data</a> and thus produces
       redundant BPMs. The Jaccard index is used to prune these redundant BPMs
-      such that no two BPMs in the final set have a Jaccard index similarly
+      such that no two BPMs in the final set have a Jaccard index similarity
       score greater than <strong>JACCARD_INDEX</strong>. Increasing this value
       will produce more BPMs and decreasing this value will produce fewer
       BPMs.  By default, <strong>JACCARD_INDEX</strong> is set to 
@@ -132,7 +132,7 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
       Genecentric increases. By default, <strong>NUMBER_BIPARTITIONS</strong>
       is set to <strong>250</strong>. (If you have a lot of CPUs to spare,
       you may get better results with <strong>500</strong> with reasonable
-      run-time performance.</dd>
+      run-time performance.)</dd>
 
   <dt><?=code('--no-squaring')?></dt>
   <dd>When set, the genetic interaction scores in the
