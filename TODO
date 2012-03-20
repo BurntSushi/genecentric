@@ -1,0 +1,9 @@
+Pruning
+=======
+Add an option to do Jaccard index pruning a little differently. Right now,
+the Jaccard index between two BPMs is defined as the size of the intersection
+between both BPMs divided by the size of the union of both BPMs.
+
+The other way to do is to do it on a module-by-module basis instead of a BPM
+by BPM basis.
+
