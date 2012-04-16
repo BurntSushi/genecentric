@@ -8,6 +8,7 @@ from bpm import conf, parallel
 
 gis = defaultdict(float)
 genes = set()
+unique_pairs = set()
 genespace = set() # slightly bigger---include all EMAP genes
 numgenes = 0
 
@@ -58,6 +59,7 @@ def load_genes():
                 ginter = ginter ** 2
         gis[(g1, g2)] = ginter
         gis[(g2, g1)] = ginter
+        unique_pairs.add((g1, g2))
 
         genes.add(g1)
         genes.add(g2)

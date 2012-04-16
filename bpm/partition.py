@@ -22,7 +22,7 @@ def bpms():
     # multiprocessing from keeping all of the cores hot.
     global happyparts
 
-    happyparts = parallel.pmap(localmaxcut, xrange(0, conf.M))
+    happyparts = partitions()
     return parallel.pmap(group_genes, enumerate(geneinter.genes))
 
 def group_genes((i, g1)):
@@ -50,6 +50,13 @@ def group_genes((i, g1)):
     parallel.print_progress()
 
     return set(mod1), set(mod2)
+
+def partitions():
+    '''
+    Convenience function for generating conf.M partitions in parallel using
+    localmaxcut.
+    '''
+    return parallel.pmap(localmaxcut, xrange(0, conf.M))
 
 def localmaxcut(m):
     '''

@@ -1,0 +1,50 @@
+#!/usr/bin/env python2
+'''
+'genecentric-predict' is a script that cuts out T% of the edges from the source
+data, and makes a negative weight prediction on those cut out edges based
+on the number of times each of the endpoints are in opposite partitions.
+'''
+
+import csv
+import random
+
+import geneids # personal library to convert locus -> product name
+
+import bpm.cmdargs.predict # Which command line arguments do we want?
+from bpm import conf, geneinter, parallel, partition, predict
+
+parallel.print_progress()
+
+geneinter.load_genes() # Creates global vars geneinter.genes and geneinter.gis
+
+# Now cut out the test set from geneinter.gis and add it to geneinter.gistest
+geneinter.test = {} # gene pair -> float
+for g1, g2 in geneinter.unique_pairs:
+    if random.random() <= conf.T:
+        # print 'Removing (%s, %s) = %f' % (g1, g2, geneinter.gis[(g1, g2)]) 
+        geneinter.test[(g1, g2)] = geneinter.gis[(g1, g2)]
+        geneinter.gis[(g1, g2)] = 0.0
+        geneinter.gis[(g2, g1)] = 0.0
+
+# print 'Total edges: %d' % len(geneinter.unique_pairs) 
+# print 'Removed edges: %d (%.2f%%)' % \ 
+    # (len(geneinter.test), 
+     # float(len(geneinter.test)) / len(geneinter.unique_pairs)) 
+
+# Calculate the total number of steps so we can measure progress
+parallel.steps = conf.M + sum(parallel.costs.values())
+
+# Create a BPM from every gene and then prune them
+parts = partition.partitions()
+predictions = predict.negative_edges(parts)
+
+outf = open(conf.predict, 'w+')
+out = csv.writer(outf, delimiter='\t')
+out.writerow(['Gene 1', 'Gene 2', 'Confidence', 'Real weight'])
+for g1, g2, confidence, real in predictions:
+    ng1 = geneids.locus_to_product(g1)
+    ng2 = geneids.locus_to_product(g2)
+    out.writerow([ng1, ng2, confidence, real])
+
+parallel.print_progress(final=True)
+
