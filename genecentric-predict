@@ -11,7 +11,7 @@ import random
 import geneids # personal library to convert locus -> product name
 
 import bpm.cmdargs.predict # Which command line arguments do we want?
-from bpm import conf, geneinter, parallel, partition, predict
+from bpm import conf, geneinter, parallel, partition, predict, prune
 
 # parallel.print_progress() 
 
@@ -23,58 +23,33 @@ tnegative = tpositive = tzero = 0
 # Now cut out the test set from geneinter.gis and add it to geneinter.gistest
 geneinter.test = {} # gene pair -> float
 for g1, g2 in geneinter.unique_pairs:
-    # score = geneinter.gis[(g1, g2)] 
-    # if score == 0.0: 
-        # zero += 1 
-    # elif score < 0.0: 
-        # negative += 1 
-    # elif score > 0.0: 
-        # positive += 1 
-    # else: 
-        # assert False, 'unreachable' 
-
     if random.random() <= conf.T:
-        # if score == 0.0: 
-            # tzero += 1 
-        # elif score < 0.0: 
-            # tnegative += 1 
-        # elif score > 0.0: 
-            # tpositive += 1 
-        # else: 
-            # print 'what', score 
-
-        # print 'Removing (%s, %s) = %f' % (g1, g2, geneinter.gis[(g1, g2)]) 
         geneinter.test[(g1, g2)] = geneinter.gis[(g1, g2)]
         geneinter.gis[(g1, g2)] = 0.0
         geneinter.gis[(g2, g1)] = 0.0
 
-# print 'Zero:', float(zero) / len(geneinter.unique_pairs) 
-# print 'Positive:', float(positive) / len(geneinter.unique_pairs) 
-# print 'Negative:', float(negative) / len(geneinter.unique_pairs) 
-# print 
-# print 'Test zero:', float(tzero) / len(geneinter.test) 
-# print 'Test positive:', float(tpositive) / len(geneinter.test) 
-# print 'Test negative:', float(tnegative) / len(geneinter.test) 
-
-# print 'Total edges: %d' % len(geneinter.unique_pairs) 
-# print 'Removed edges: %d (%.2f%%)' % \ 
-    # (len(geneinter.test), 
-     # float(len(geneinter.test)) / len(geneinter.unique_pairs)) 
-
 # Calculate the total number of steps so we can measure progress
-parallel.steps = conf.M + sum(parallel.costs.values())
+parallel.steps = conf.M + geneinter.genecount() + sum(parallel.costs.values())
 
 # Create a BPM from every gene and then prune them
-parts = partition.partitions()
-predictions = predict.negative_edges(parts)
+parts = partition.bpms()
+bpms = prune.prune(parts)
+predictions = predict.bpm_prediction(bpms)
 
 outf = open(conf.predict, 'w+')
 out = csv.writer(outf, delimiter='\t')
-out.writerow(['Gene 1', 'Gene 2', 'Confidence', 'Real weight'])
-for g1, g2, confidence, real in predictions:
+out.writerow(['Prediction', 'Gene 1', 'Gene 2',
+              '# Opp', '# Same', '# NIL', 'Real weight'])
+for g1, g2, opp, same, nil, real in predictions:
     ng1 = geneids.locus_to_product(g1)
     ng2 = geneids.locus_to_product(g2)
-    out.writerow([ng1, ng2, confidence, real])
+    if opp > same:
+        predStr = 'NEGATIVE'
+    elif same > opp:
+        predStr = 'POSITIVE'
+    else:
+        predStr = 'UNDECIDED'
+    out.writerow([predStr, ng1, ng2, opp, same, nil, real])
 
 parallel.print_progress(final=True)
 

@@ -1,0 +1,36 @@
+#!/usr/bin/env python2
+
+import csv
+import sys
+
+def prop(num, den):
+    return 100 * (float(num) / float(den))
+
+for f in sys.argv[1:]:
+    total = 0
+    pos_tp = pos_t = 0
+    neg_tp = neg_t = 0
+    for i, row in enumerate(csv.reader(open(f), delimiter='\t')):
+        if i == 0:
+            continue
+        total += 1
+        score = float(row[6])
+        pred = row[0]
+
+        if pred == 'NEGATIVE':
+            neg_t += 1
+            if score < 0.0:
+                neg_tp += 1
+        if pred == 'POSITIVE':
+            pos_t += 1
+            if score > 0.0:
+                pos_tp += 1
+
+    print f
+    print 'Total edges: %d' % total
+    print 'Negative predictions: %d' % neg_t
+    print 'Negative true positive percentage: %.4f' % prop(neg_tp, neg_t)
+    print 'Positive predictions: %d' % pos_t
+    print 'Positive true positive percentage: %.4f' % prop(pos_tp, pos_t)
+    print
+
