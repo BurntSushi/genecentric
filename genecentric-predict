@@ -13,18 +13,48 @@ import geneids # personal library to convert locus -> product name
 import bpm.cmdargs.predict # Which command line arguments do we want?
 from bpm import conf, geneinter, parallel, partition, predict
 
-parallel.print_progress()
+# parallel.print_progress() 
 
 geneinter.load_genes() # Creates global vars geneinter.genes and geneinter.gis
+
+negative = positive = zero = 0
+tnegative = tpositive = tzero = 0
 
 # Now cut out the test set from geneinter.gis and add it to geneinter.gistest
 geneinter.test = {} # gene pair -> float
 for g1, g2 in geneinter.unique_pairs:
+    # score = geneinter.gis[(g1, g2)] 
+    # if score == 0.0: 
+        # zero += 1 
+    # elif score < 0.0: 
+        # negative += 1 
+    # elif score > 0.0: 
+        # positive += 1 
+    # else: 
+        # assert False, 'unreachable' 
+
     if random.random() <= conf.T:
+        # if score == 0.0: 
+            # tzero += 1 
+        # elif score < 0.0: 
+            # tnegative += 1 
+        # elif score > 0.0: 
+            # tpositive += 1 
+        # else: 
+            # print 'what', score 
+
         # print 'Removing (%s, %s) = %f' % (g1, g2, geneinter.gis[(g1, g2)]) 
         geneinter.test[(g1, g2)] = geneinter.gis[(g1, g2)]
         geneinter.gis[(g1, g2)] = 0.0
         geneinter.gis[(g2, g1)] = 0.0
+
+# print 'Zero:', float(zero) / len(geneinter.unique_pairs) 
+# print 'Positive:', float(positive) / len(geneinter.unique_pairs) 
+# print 'Negative:', float(negative) / len(geneinter.unique_pairs) 
+# print 
+# print 'Test zero:', float(tzero) / len(geneinter.test) 
+# print 'Test positive:', float(tpositive) / len(geneinter.test) 
+# print 'Test negative:', float(tnegative) / len(geneinter.test) 
 
 # print 'Total edges: %d' % len(geneinter.unique_pairs) 
 # print 'Removed edges: %d (%.2f%%)' % \ 

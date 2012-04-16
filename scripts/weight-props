@@ -1,0 +1,30 @@
+#!/usr/bin/env python2
+
+import csv
+import sys
+
+def prop(num, den):
+    return 100 * (float(num) / float(den))
+
+for f in sys.argv[1:]:
+    t = p = n = z = 0
+    for i, row in enumerate(csv.reader(open(f), delimiter='\t')):
+        if i == 0:
+            continue
+        t += 1
+        score = float(row[3])
+
+        if score == 0.0:
+            z += 1
+        elif score < 0.0:
+            n += 1
+        elif score > 0.0:
+            p += 1
+        else:
+            print 'what', score
+    print f
+    print 'Zero: %.4f' % prop(z, t)
+    print 'Positive: %.4f' % prop(p, t)
+    print 'Negative: %.4f' % prop(n, t)
+    print
+
