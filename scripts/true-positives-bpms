@@ -16,12 +16,14 @@ for f in sys.argv[1:]:
         total += 1
         score = float(row[6])
         pred = row[0]
+        opp = int(row[3])
+        same = int(row[4])
 
-        if pred == 'NEGATIVE':
+        if pred == 'NEGATIVE' and opp >= 2:
             neg_t += 1
             if score < 0.0:
                 neg_tp += 1
-        if pred == 'POSITIVE':
+        if pred == 'POSITIVE' and same >= 2:
             pos_t += 1
             if score > 0.0:
                 pos_tp += 1
