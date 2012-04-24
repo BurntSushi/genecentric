@@ -1,0 +1,47 @@
+#!/usr/bin/env python2
+'''
+'genecentric-bpms' is a script that generates a set of between-pathway modules 
+in BPM file format.
+'''
+
+import csv
+
+import bpm.cmdargs.graph # Which command line arguments do we want?
+from bpm import conf, bpmreader, geneinter, parallel
+
+import pydot
+
+BPM = 0
+
+# parallel.print_progress() 
+
+geneinter.load_genes() # Creates global vars geneinter.genes and geneinter.gis
+
+# Read the BPMs
+bpms = bpmreader.read(conf.bpm)
+
+# Calculate the total number of steps so we can measure progress
+parallel.steps = len(bpms)
+
+# Setup the graph.
+graph = pydot.Dot(graph_name='BPM%d' % BPM, graph_type='graph')
+
+# Add the nodes
+def create_node(gene_name):
+    n = pydot.Node(gene_name)
+    graph.add_node(n)
+    return n
+nodes = (map(create_node, bpms[BPM][0]), map(create_node, bpms[BPM][1]))
+
+# Now add the edges.
+for i1, g1 in enumerate(bpms[BPM][0]):
+    for i2, g2 in enumerate(bpms[BPM][1]):
+        gi = geneinter.gi(g1, g2)
+        if gi != 0:
+            edge = pydot.Edge(nodes[0][i1], nodes[1][i2])
+            graph.add_edge(edge)
+
+graph.write_png('blah.png')
+
+# parallel.print_progress(final=True) 
+

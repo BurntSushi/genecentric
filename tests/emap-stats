@@ -1,11 +1,8 @@
 #!/usr/bin/env python2.7
 
 import argparse
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict
 import csv
-from itertools import product
-import os.path
-import sys
 
 from bpm.cmdargs import assert_read_access
 
@@ -33,6 +30,13 @@ stats = OrderedDict([
     ('del_essential', 0),
     ('not_del', 0),
     ('not_del_essential', 0),
+
+    ('total_genes', 0),
+    ('not_essential_genes', 0),
+    ('del_del_genes', 0),
+    ('del_essential_genes', 0),
+    ('not_del_genes', 0),
+    ('not_del_essential_genes', 0),
 ])
 
 nicelabels = {
@@ -44,6 +48,13 @@ nicelabels = {
     'del_essential': '# of all deletion/deletion NON-essential edges',
     'not_del': '# of all NON-deletion/deletion edges',
     'not_del_essential': '# of all NON-deletion/deletion NON-essential edges',
+
+    'total_genes': '# of genes',
+    'not_essential_genes': '# of of NON-essential genes',
+    'del_del_genes': '# of deletion/deletion genes',
+    'del_essential_genes': '# of deletion/deletion NON-essential genes',
+    'not_del_genes': '# of NON-deletion/deletion genes',
+    'not_del_essential_genes': '# of NON-deletion/deletion NON-essential genes',
 }
 
 # Get the essential genes in a set first
@@ -57,9 +68,19 @@ allpairs_noallele = set()
 uniquepairs = set()
 deldel = set()
 notdeldel = set()
+
+allgenes = set()
+notessential = set()
+deldelgenes = set()
+notdelgenes = set()
+delessential_genes = set()
+not_delessential_genes = set()
 for row in csv.DictReader(open(conf.emap_file), delimiter='\t'):
     g1, g2 = row['ft1_systematic_name'], row['ft2_systematic_name']
     a1, a2 = row['ft1_allele'], row['ft2_allele']
+
+    allgenes.add(g1)
+    allgenes.add(g2)
 
     allpairs.add(((g1, a1), (g2, a2)))
     allpairs_noallele.add((g1, g2))
@@ -69,8 +90,12 @@ for row in csv.DictReader(open(conf.emap_file), delimiter='\t'):
 
     if (a1, a2) == ('deletion', 'deletion'):
         deldel.add(((g1, a1), (g2, a2)))
+        deldelgenes.add(g1)
+        deldelgenes.add(g2)
     else:
         notdeldel.add(((g1, a1), (g2, a2)))
+        notdelgenes.add(g1)
+        notdelgenes.add(g2)
 
 stats['total_rows'] = len(allpairs)
 stats['total_pairs'] = len(allpairs_noallele)
@@ -79,15 +104,30 @@ stats['del_del'] = len(deldel)
 stats['not_del'] = len(notdeldel)
 stats['essential'] = len(essentials)
 
+stats['total_genes'] = len(allgenes)
+stats['del_del_genes'] = len(deldelgenes)
+stats['not_del_genes'] = len(notdelgenes)
+
 # Calculate some of the stuff above but after removing essentials...
 for (g1, a1), (g2, a2) in allpairs:
     if g1 in essentials or g2 in essentials:
         continue
+
+    notessential.add(g1)
+    notessential.add(g2)
     
     if (a1, a2) == ('deletion', 'deletion'):
         stats['del_essential'] += 1
+        delessential_genes.add(g1)
+        delessential_genes.add(g2)
     else:
         stats['not_del_essential'] += 1
+        not_delessential_genes.add(g1)
+        not_delessential_genes.add(g2)
+
+stats['not_essential_genes'] = len(notessential)
+stats['del_essential_genes'] = len(delessential_genes)
+stats['not_del_essential_genes'] = len(not_delessential_genes)
 
 maxlenlabel = max([len(v) for v in nicelabels.itervalues()]) + 2
 for label, value in stats.iteritems():
