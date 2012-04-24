@@ -1,0 +1,66 @@
+#!/usr/bin/env python2.7
+'''
+A quick script to transform raw E-MAP data from
+"Epistatic relationships reveal the functional organization of yeast 
+transcription factors" into a nice genetic interaction file.
+
+The raw format is a matrix in CSV format. Yippeee!
+''' 
+import argparse
+import csv
+
+parser = argparse.ArgumentParser(
+    description='Transform raw transcription EMAP data to Genecentric gi file.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('transcription', type=str,
+                    metavar='INPUT_TRANSCRIPTION_E-MAP_FILE',
+                    help='Location of the csv file')
+parser.add_argument('--unique-genes', action='store_true',
+                    help='When set, a simple unique list of genes will '
+                         'be printed')
+conf = parser.parse_args()
+
+transcription = csv.reader(open(conf.transcription), delimiter='\t')
+
+# Function to pull GENE_NAME out of 'GENE_NAME - DELETION'
+def gene_name(s):
+    return s[:s.index(' ')]
+
+# Create a column -> gene mapping.
+colgenes = {}
+firstRow = transcription.next()
+for i, geneName in enumerate(firstRow):
+    if geneName.lower().strip() == 'average':
+        continue
+    colgenes[i] = gene_name(geneName) 
+
+if conf.unique_genes:
+    # Our unique set of genes.
+    # We then feed these to the interactome database to get a nice and complete
+    # tab delimited file.
+    genes = set()
+
+    for gene in colgenes.values():
+        genes.add(gene)
+
+    for gene in sorted(genes):
+        print gene
+else:
+    def write_gene_pair(g1, g2, score):
+        g1, g2, score = g1.strip(), g2.strip(), score.strip()
+        if len(g1) == 0 or len(g2) == 0:
+            return
+        if len(score) == 0:
+            score = '0.0'
+        print '%s\t%s\t%s' % (g1, g2, score)
+
+    for row in transcription:
+        g1 = gene_name(row[0])
+        for i, score in enumerate(row):
+            if i == 0:
+                continue
+            g2 = colgenes[i]
+            if g1 == g2:
+                continue
+            write_gene_pair(g1, g2, score)
+

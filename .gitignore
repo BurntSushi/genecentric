@@ -5,3 +5,4 @@ MANIFEST
 *.pyc
 data/chrombio.csv
 docs/
+data/raw/

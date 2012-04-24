@@ -1,0 +1,60 @@
+#!/usr/bin/env python2.7
+'''
+A quick script to transform raw E-MAP data from
+"A plasma-membrane E-MAP reveals links of the eisosome with
+sphingolipid metabolism and endosomal trafficking" into a nice genetic
+interaction file.
+
+This is not pleasant. Apparently the format for the raw data was wisely chosen
+so that the maximum number of rows in Excel would present an interesting
+challenge.
+''' 
+import argparse
+import csv
+
+parser = argparse.ArgumentParser(
+    description='Transform raw plasma E-MAP data to Genecentric gi file.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('plasma', type=str,
+                    metavar='INPUT_PLASMA_E-MAP_FILE',
+                    help='Location of the csv file')
+parser.add_argument('--unique-genes', action='store_true',
+                    help='When set, a simple unique list of genes will '
+                         'be printed')
+conf = parser.parse_args()
+
+plasma = csv.reader(open(conf.plasma))
+
+# Just because. Golly.
+plasma.next()
+plasma.next()
+plasma.next()
+
+# Okay, now we can iterate through the rows
+if conf.unique_genes:
+    # Our unique set of genes.
+    # We then feed these to the interactome database to get a nice and complete
+    # tab delimited file.
+    genes = set()
+
+    for row in plasma:
+        for g in (row[1], row[2], row[10], row[11]):
+            g = g.strip()
+            if len(g) > 0:
+                genes.add(g)
+
+    for gene in sorted(genes):
+        print gene
+else:
+    def write_gene_pair(g1, g2, score):
+        g1, g2, score = g1.strip(), g2.strip(), score.strip()
+        if len(g1) == 0 or len(g2) == 0:
+            return
+        if len(score) == 0:
+            score = '0.0'
+        print '%s\t%s\t%s' % (g1, g2, score)
+
+    for row in plasma:
+        write_gene_pair(row[1], row[2], row[5])
+        write_gene_pair(row[10], row[11], row[14])
+

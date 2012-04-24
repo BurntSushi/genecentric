@@ -1,0 +1,26 @@
+#!/usr/bin/env python2
+'''
+This script is meant to convert gi files using SGD Standard to SGD Systematic.
+
+This is an in house script not meant for public consumption. (Since it requires
+a library that is not distributed.)
+'''
+import argparse
+import csv
+
+import geneids
+
+parser = argparse.ArgumentParser(
+    description='GI file using SGD Standard to SGD Systematic',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('gifile', type=str,
+                    metavar='INPUT_GI_FILE',
+                    help='Location of the csv file')
+conf = parser.parse_args()
+
+gifile = csv.reader(open(conf.gifile), delimiter='\t')
+
+tosys = geneids.standard_to_systematic
+for g1, g2, score in gifile:
+    print '%s/%s/%s' % (tosys(g1), tosys(g2), score)
+

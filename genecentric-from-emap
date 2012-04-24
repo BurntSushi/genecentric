@@ -37,6 +37,9 @@ conf = parser.parse_args()
 reader = csv.reader(open(conf.emap), delimiter=conf.delimiter)
 writer = csv.writer(open(conf.gi, 'w+'), delimiter='\t')
 
+# Keep a record of all gene pairs so we don't print duplicates.
+pairs = set()
+
 # If an interaction score is not the result of a deletion/deletion event,
 # it is excluded from the set of genes used.
 for i, row in enumerate(reader):
@@ -48,5 +51,15 @@ for i, row in enumerate(reader):
               or row[conf.g2_allele] != 'deletion')):
             continue
 
+    g1, g2 = row[conf.g1_name].strip(), row[conf.g2_name].strip()
+    if (g1, g2) in pairs:
+        continue
+
+    pairs.add((g1, g2))
+    pairs.add((g2, g1))
+
+    score = row[conf.int_score].strip()
+    if len(score) == 0 or score == '0':
+        score = '0.0'
     writer.writerow([row[conf.g1_name], row[conf.g2_name], row[conf.int_score]])
 
