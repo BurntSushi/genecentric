@@ -2,6 +2,9 @@
 '''
 'genecentric-bpms' is a script that generates a set of between-pathway modules 
 in BPM file format.
+
+XXX: This is a very rough prototype. It currently dumps a png file to the
+current working directory of the first BPM.
 '''
 
 import csv
