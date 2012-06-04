@@ -1,0 +1,9 @@
+This directory contains all files related to the source oncogene data.
+
+The xls file is directly from the oncogene folks.
+
+The plain 'oncogenes' file is a line-delimited list of all oncogenes.
+
+The oncogene-[1-5] files are 5 separate pieces of the oncogenes file. They were
+used to gather orthologs from Isobase. (Isobase choked when given all onco genes
+at once.)

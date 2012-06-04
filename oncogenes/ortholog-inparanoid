@@ -1,0 +1,74 @@
+#!/usr/bin/env python2
+
+import argparse
+
+# The Bio.Ortholog module is maintained in my fork of BioPython at
+# https://github.com/BurntSushi/biopython.
+# I merge upstream changes occasionally, so you should be able to install it
+# over any other BioPython install without much fuss.
+from Bio.Ortholog import InParanoid
+from Bio.Ortholog import species
+
+parser = argparse.ArgumentParser(
+    description='Get Orthologs in Yeast from a list of Human genes '
+                'using InParanoid.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('oncogenes', type=str,
+   metavar='INPUT_ONCOGENES_LIST_FILE',
+   help='Location of the oncogenes list file.')
+aa('yeastorthologs', type=str,
+   metavar='OUTPUT_YEAST_ORTHOLOGS_LIST_FILE',
+   help='Location of the orthologous yeast genes output file.')
+conf = parser.parse_args()
+
+human = 'Homo Sapiens'
+yeast = 'Saccharomyces cerevisiae S288c'
+humanid, yeastid = species.inparanoid[human], species.inparanoid[yeast]
+
+def yeast_and_human(record):
+    found_human, found_yeast = False, False
+    for s in record.species:
+        if int(s.id) == humanid:
+            found_human = True
+        if int(s.id) == yeastid:
+            found_yeast = True
+        if found_human and found_yeast:
+            break
+    return found_human and found_yeast
+
+out = open(conf.yeastorthologs, 'w+')
+for oncogene in open(conf.oncogenes):
+    gene = oncogene.strip()
+    try:
+        res = InParanoid.gene(gene, specieslist=[human, yeast])
+    except ValueError:
+        print 'No results for gene %s' % gene
+        continue
+
+    records = InParanoid.parse(res)
+
+    printed_found = False
+    for record in records:
+        if not yeast_and_human(record):
+            continue
+        if not printed_found:
+            print 'Found results for %s' % gene
+            printed_found = True
+        for i, cluster in enumerate(record.clusters):
+            for ortholog in cluster.orthologs:
+                row = []
+
+                row.append(gene)
+                row.append(str(i))
+                row.append(ortholog.species.desc_long)
+                row.append(ortholog.gene)
+                row.append(ortholog.protein)
+                if ortholog.alts:
+                    for alt in ortholog.alts:
+                        row.append('%s (%s)' % (alt.id, alt.db))
+
+                print >> out, ','.join(row)
+    if not printed_found:
+        print 'No results for gene %s' % gene
+

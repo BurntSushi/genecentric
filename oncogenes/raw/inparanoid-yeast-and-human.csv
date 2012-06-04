@@ -1,0 +1,35 @@
+HIP1,0,Saccharomyces cerevisiae S288c,AGP3,YFL055W
+HIP1,0,Saccharomyces cerevisiae S288c,GAP1,YKR039W
+HIP1,0,Saccharomyces cerevisiae S288c,CAN1,YEL063C
+HIP1,0,Saccharomyces cerevisiae S288c,LYP1,YNL268W
+HIP1,0,Saccharomyces cerevisiae S288c,ALP1,YNL270C
+HIP1,0,Saccharomyces cerevisiae S288c,HIP1,YGR191W
+HIP1,0,Saccharomyces cerevisiae S288c,DIP5,YPL265W
+HIP1,0,Saccharomyces cerevisiae S288c,BAP2,YBR068C
+HIP1,0,Saccharomyces cerevisiae S288c,TAT1,YBR069C
+HIP1,0,Saccharomyces cerevisiae S288c,AGP1,YCL025C
+HIP1,0,Saccharomyces cerevisiae S288c,BAP3,YDR046C
+HIP1,0,Saccharomyces cerevisiae S288c,TAT2,YOL020W
+HIP1,0,Saccharomyces cerevisiae S288c,MMP1,YLL061W
+HIP1,0,Saccharomyces cerevisiae S288c,GNP1,YDR508C
+HIP1,0,Saccharomyces cerevisiae S288c,PUT4,YOR348C
+HIP1,0,Saccharomyces cerevisiae S288c,SAM3,YPL274W
+HIP1,0,Saccharomyces cerevisiae S288c,AGP2,YBR132C
+HIP1,0,Homo Sapiens,ENSG00000013293,ENSP00000231706,Q8TBB6 (UniProt/SwissProt Accession),NP_066000 (RefSeq Protein ID)
+HIP1,0,Homo Sapiens,ENSG00000165349,ENSP00000298085,Q8WY07 (UniProt/SwissProt Accession),NP_001041629 (RefSeq Protein ID),NP_116192 (RefSeq Protein ID)
+HIP1,0,Homo Sapiens,ENSG00000003989,ENSP00000381162,NP_003037 (RefSeq Protein ID)
+HIP1,0,Homo Sapiens,ENSG00000099960,ENSP00000384278,NP_004164 (RefSeq Protein ID),O43246 (UniProt/SwissProt Accession)
+HIP1,0,Homo Sapiens,ENSG00000139514,ENSP00000370128,P30825 (UniProt/SwissProt Accession),NP_003036 (RefSeq Protein ID)
+PCM1,0,Saccharomyces cerevisiae S288c,PCM1,YEL058W
+PCM1,0,Homo Sapiens,ENSG00000013375,ENSP00000283977,O95394 (UniProt/SwissProt Accession),NP_056414 (RefSeq Protein ID)
+PER1,0,Saccharomyces cerevisiae S288c,PER1,YCR044C
+PER1,0,Homo Sapiens,ENSG00000161395,ENSP00000300658,Q96FM1 (UniProt/SwissProt Accession),NP_219487 (RefSeq Protein ID)
+PIM1,0,Saccharomyces cerevisiae S288c,PIM1,YBL022C
+PIM1,0,Homo Sapiens,ENSG00000196365,ENSP00000353826,P36776 (UniProt/SwissProt Accession),NP_004784 (RefSeq Protein ID)
+TIF1,0,Saccharomyces cerevisiae S288c,TIF2,YJL138C
+TIF1,0,Saccharomyces cerevisiae S288c,TIF1,YKR059W
+TIF1,0,Homo Sapiens,ENSG00000161960,ENSP00000293831
+TIF1,0,Homo Sapiens,ENSG00000156976,ENSP00000326381,Q14240 (UniProt/SwissProt Accession),NP_001958 (RefSeq Protein ID)
+TOP1,0,Saccharomyces cerevisiae S288c,TOP1,YOL006C
+TOP1,0,Homo Sapiens,ENSG00000198900,ENSP00000354522,P11387 (UniProt/SwissProt Accession),NP_003277 (RefSeq Protein ID)
+TOP1,0,Homo Sapiens,ENSG00000184428,ENSP00000328835,Q969P6 (UniProt/SwissProt Accession),NP_443195 (RefSeq Protein ID)

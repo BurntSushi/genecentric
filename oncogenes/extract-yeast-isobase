@@ -1,0 +1,50 @@
+#!/usr/bin/env python2
+
+import argparse
+import csv
+
+parser = argparse.ArgumentParser(
+    description='Extract yeast genes from the tab-delimited files downloaded '
+                'from Isobase.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('isobase', type=str,
+   metavar='INPUT_ISOBASE_CSV_FILE',
+   help='Location of the Isobase CSV file.')
+aa('yeastgenes', type=str,
+   metavar='OUTPUT_YEAST_GENES',
+   help='Location of the othologous yeast gene list file.')
+conf = parser.parse_args()
+
+# There is some slight complexity to parsing the Isobase file because we
+# can only accept genes in yeast that are orthologous in humans and yeast.
+# Thus, we need to separate each orthologous cluster and make sure a gene from
+# both humans and yeast is present.
+
+everything = ''.join(filter(
+    lambda ln: len(ln.strip()) > 0 and not ln.startswith('Species'),
+    open(conf.isobase).readlines()))
+clusters = everything.split('#Isologs:\n')
+
+genes = set()
+for cluster in clusters:
+    cluster = cluster.strip()
+    yeastGenes = set()
+    foundHuman = False
+    for line in cluster.split('\n'):
+        row = line.split('\t')
+        if not row:
+            continue
+        if row[0] == 'Species': # skip the header
+            continue
+        if row[0] == 'sc' and row[3].strip():
+            yeastGenes.add(row[3].strip().upper())
+        elif row[0] == 'hs':
+            foundHuman = True
+    if foundHuman:
+        genes = genes.union(yeastGenes)
+
+out = open(conf.yeastgenes, 'w+')
+for gene in genes:
+    print >> out, gene
+

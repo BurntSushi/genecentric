@@ -1,0 +1,29 @@
+This raw directory contains data retrieved directly from the Ortholog 
+databases. The idea is to use 'extract-yeast-[db-name]' scripts from the parent 
+directory to yield a list of yeast gene identifiers. Finally, gene-list-stats 
+can be run on the output of extract-yeast[db-name].
+
+InParanoid
+==========
+The sort-of exception is InParanoid, in that its raw data is manufactured and 
+not straight from InParanoid. InParanoid data was retrieved using my 
+Ortholog BioPython module, which was translated into several CSV dumps. The 
+relevant CSV dump is inparanoid-yeast-and-human.csv. The others, 
+inparanoid-all.csv and inparanoid-yeast-human-all.csv are supersets of 
+inparanoid-yeast-and-human.csv. The former has no restriction on species while 
+the latter contains orthologous clusters that contain EITHER yeast or human 
+genes. (In contrast, the useful CSV file, inparanoid-yeast-and-human.csv 
+contains only orthologous clusters with BOTH yeast and human genes.)
+
+Isobase
+=======
+The Isobase data was retrieved in 5 separate queries since it choked when given 
+all onco genes at once. The final raw file that should be used, isobase.csv is 
+a simple concatenation of isobase-[1-5].csv.
+
+RoundUp
+=======
+Currently, the roundup raw data is not used. In order to be used, an identifier 
+translation problem needs to be solved. (Uniprot -> SGD systemtic yeast 
+identifiers.)
+
