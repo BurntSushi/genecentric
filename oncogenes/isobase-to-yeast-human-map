@@ -1,0 +1,84 @@
+#!/usr/bin/env python2
+
+import argparse
+from collections import defaultdict
+import csv
+import sys
+
+parser = argparse.ArgumentParser(
+    description='Extract yeast genes from the tab-delimited files downloaded '
+                'from Isobase.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('isobase', type=str,
+   metavar='INPUT_ISOBASE_CSV_FILE',
+   help='Location of the Isobase CSV file.')
+aa('mapping', type=str,
+   metavar='OUTPUT_YEAST_HUMAN_MAPPING',
+   help='Location of the mapping from yeast to human genes.')
+conf = parser.parse_args()
+
+# There is some slight complexity to parsing the Isobase file because we
+# can only accept genes in yeast that are orthologous in humans and yeast.
+# Thus, we need to separate each orthologous cluster and make sure a gene from
+# both humans and yeast is present. Otherwise, that entire cluster is skipped.
+everything = ''.join(filter(
+    lambda ln: len(ln.strip()) > 0 and not ln.startswith('Species'),
+    open(conf.isobase).readlines()))
+clusters = everything.split('#Isologs:\n')
+
+# The mapping from a single yeast gene to any number of human genes.
+# Note that all genes here are represented as a
+# tuple (nice-name, systematic-name).
+mapping = defaultdict(set)
+
+for cluster in clusters:
+    cluster = cluster.strip()
+    yeastGenes, humanGenes = set(), set()
+    foundHuman, foundYeast = False, False
+    for line in cluster.split('\n'):
+        row = line.split('\t')
+        if not row:
+            continue
+        if row[0] == 'Species': # skip the header
+            continue
+        if len(row) <= 2:
+            continue
+        if len(row) <= 3:
+            print 'Say what? Has a nice name but not a systematic name.'
+            print row
+            sys.exit(1)
+
+        nice, systematic = row[2].strip().upper(), row[3].strip().upper()
+        if not nice and not systematic:
+            continue
+        if not nice:
+            nice = 'N/A'
+        if not systematic:
+            systematic = 'N/A'
+
+        if row[0] == 'sc':
+            foundYeast = True
+            yeastGenes.add((nice, systematic))
+        elif row[0] == 'hs':
+            foundHuman = True
+            humanGenes.add((nice, systematic))
+
+    # Only add to the mapping if the cluster has *both* human and yeast genes.
+    # Otherwise, we can't be sure that the genes are orthologous in human
+    # and yeast.
+    if foundHuman and foundYeast:
+        for yeastGene in yeastGenes:
+            for humanGene in humanGenes:
+                mapping[yeastGene].add(humanGene)
+
+# Write gene names as nice:$:systematic.
+def geneStr((nice, systematic)):
+    return '%s:$:%s' % (nice, systematic)
+
+# Now vomit everything in tab-delimited format.
+out = open(conf.mapping, 'w+')
+for yeastGene, humanGenes in mapping.iteritems():
+    yeastGene, humanGenes = geneStr(yeastGene), map(geneStr, humanGenes)
+    print >> out, '%s\t%s' % (yeastGene, '\t'.join(humanGenes))
+
