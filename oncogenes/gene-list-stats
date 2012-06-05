@@ -29,13 +29,12 @@ for gene in open(conf.yeastgenes):
     cmpgenes.add(gene.strip().upper())
 
 common = gigenes.intersection(cmpgenes)
-diff = cmpgenes.difference(gigenes)
-
 print >> out, 'Genes in common (%d):' % len(common)
 print >> out, '%s' % ', '.join(sorted(common))
 
 print
 
+diff = cmpgenes.difference(gigenes)
 print >> out, 'Genes in %s but not in GI (%d):' % (conf.yeastgenes, len(diff))
 print >> out, '%s' % ', '.join(sorted(diff))
 
