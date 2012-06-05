@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 
 import argparse
+import csv
 
 import geneids
 
@@ -16,17 +17,30 @@ aa('bpm', type=str,
 aa('oncogenes', type=str,
    metavar='INPUT_ONCO_GENES',
    help='Location of the othologous yeast gene list file.')
+aa('orthologs', type=str,
+   metavar='INPUT_YEAST_HUMAN_ORTHOLOGS',
+   help='Location of the orthologous mapping from EMAP genes used to generate '
+        'the input BPM file to human genes.')
 aa('obpm', type=str,
    metavar='OUTPUT_BPM_FILE',
    help='Location of the output BPM file.')
 aa('--nice', action='store_true',
    help='When set, locus (sgd_systematic) names will be translated to product '
-        'names.')
+        'names if possible.')
 conf = parser.parse_args()
 
+# Put all of the oncogenes into a set.
 oncogenes = set()
 for gene in open(conf.oncogenes):
     oncogenes.add(gene.strip().upper())
+
+# Construct set of yeast genes from the INPUT_YEAST_HUMAN_ORTHOLOGS
+# mapping file. The idea here is that if there's a yeast gene in that file,
+# then it has a human ortholog.
+humanOrths = set()
+for row in csv.reader(open(conf.orthologs), delimiter='\t'):
+    _, systematic = row[0].split(':$:')
+    humanOrths.add(systematic)
 
 def translate(gene):
     newgene = gene
@@ -34,6 +48,8 @@ def translate(gene):
         newgene = geneids.locus_to_product(newgene)
     if gene in oncogenes:
         newgene = '*%s*' % newgene
+    elif gene in humanOrths:
+        newgene = '+%s+' % newgene
     return newgene
 
 out = open(conf.obpm, 'w+')
