@@ -21,6 +21,8 @@ The Isobase data was retrieved in 5 separate queries since it choked when given
 all onco genes at once. The final raw file that should be used, isobase.csv is 
 a simple concatenation of isobase-[1-5].csv.
 
+A similar work-around was used for all genes in the chrom bio data set.
+
 RoundUp
 =======
 Currently, the roundup raw data is not used. In order to be used, an identifier 
