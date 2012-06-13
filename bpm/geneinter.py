@@ -11,7 +11,7 @@ genes = set()
 genespace = set() # slightly bigger---include all EMAP genes
 numgenes = 0
 
-def load_genes():
+def load_genes(geneinter_file='', essentials_file='', squaring=True):
     '''
     Loads all of the gene pairs and their corresponding interaction scores
     into memory. It also keeps a set of all genes for iterative purposes.
@@ -31,11 +31,18 @@ def load_genes():
     Basically, we force the dictionary to be a reflexive matrix.
     '''
     essentials = set()
-    if conf.essentials:
+    if conf is not None and conf.essentials:
         for line in open(conf.essentials):
             essentials.add(line.strip())
+    else:
+        for line in open(essentials_file):
+            essentials.add(line.strip())
 
-    for row in csv.reader(open(conf.geneinter), delimiter='\t'):
+    if conf is not None:
+        reader = csv.reader(open(conf.geneinter), delimiter='\t')
+    else:
+        reader = csv.reader(open(geneinter_file), delimiter='\t')
+    for row in reader:
         g1, g2, intscore = row[0], row[1], row[2]
 
         genespace.add(g1)
@@ -51,7 +58,7 @@ def load_genes():
         except ValueError:
             ginter = 0.0
 
-        if conf.squaring:
+        if (conf is not None and conf.squaring) or squaring:
             if ginter < 0:
                 ginter = - (ginter ** 2)
             else:
