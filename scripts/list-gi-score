@@ -1,0 +1,34 @@
+#!/usr/bin/env python2
+
+import argparse
+
+from bpm import bpmreader, geneinter
+
+import geneids
+
+parser = argparse.ArgumentParser(
+    description='Print genetic interaction scores for all gene pairs in a BPM.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('geneinter', type=str,
+   metavar='INPUT_GENETIC_INTERACTION_FILE', help='Location of the GI file.')
+aa('bpm', type=str, metavar='INPUT_BPM_FILE', help='BPM file to translate.')
+aa('bpmi', type=int, metavar='BPM_NUMBER', help='The BPM index to use.')
+aa('-e', '--essential-list', dest='essentials', type=str, default=None,
+   metavar='ESSENTIAL_FILE',
+   help='The location of an essential gene list file. (One gene per line.) '
+        'Any genes in this file will be excluded from the set of genes used '
+        'to generate BPMs.')
+conf = parser.parse_args()
+
+geneinter.load_genes(conf.geneinter, conf.essentials)
+
+# Read the BPMs
+bpms = bpmreader.read(conf.bpm)
+
+# Now add the edges.
+for i1, g1 in enumerate(bpms[conf.bpmi][0]):
+    for i2, g2 in enumerate(bpms[conf.bpmi][1]):
+        gi = geneinter.gi(g1, g2)
+        print geneids.locus_to_product(g1), geneids.locus_to_product(g2), gi
+
