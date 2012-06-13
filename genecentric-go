@@ -1,8 +1,7 @@
 #!/usr/bin/env python2
 '''
 'genecentric-go' takes a BPM file as input and outputs a set of GO enrichment 
-results
-for every module in the BPM file.
+results for every module in the BPM file.
 '''
 
 from functools import partial
@@ -30,5 +29,5 @@ parallel.print_progress(final=True)
 
 with open(conf.enrichment, 'w+') as out:
     for bpmi, modi, genes, goterms in sorted(bpmenrichment):
-        print >> out, enrichment.write_bpm(out, bpmi, modi, genes, goterms)
+        print >> out, enrichment.write_bpm(bpmi, modi, genes, goterms)
 

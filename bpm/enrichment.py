@@ -29,17 +29,22 @@ def sortgo(goterms):
     Sorts the keys of a goterms dictionary according to the current
     configuration.
     '''
-    reverse = True if conf.order_go == 'desc' else False
+    if conf is None:
+        reverse = False
+        sort_by = 'p'
+    else:
+        reverse = conf.order_go == 'desc'
+        sort_by = conf.sort_go_by
 
-    if conf.sort_go_by == 'p':
+    if sort_by == 'p':
         return sorted(goterms, key=lambda acc: goterms[acc]['p'],
                       reverse=reverse)
-    elif conf.sort_go_by == 'accession':
+    elif sort_by == 'accession':
         return sorted(goterms, reverse=reverse)
-    elif conf.sort_go_by == 'name':
+    elif sort_by == 'name':
         return sorted(goterms, key=lambda acc: goterms[acc]['name'].lower(),
                       reverse=reverse)
-    elif conf.sort_go_by == 'num_genes_with':
+    elif sort_by == 'num_genes_with':
         return sorted(goterms, key=lambda acc: goterms[acc]['num_with'],
                       reverse=reverse)
 
@@ -90,7 +95,7 @@ def read_bpm(bpmtext):
 
     return bpmi, modi, genes, goterms
 
-def write_bpm(out, bpmi, modi, genes, goterms):
+def write_bpm(bpmi, modi, genes, goterms):
     '''
     Writes a BPM entry with GO enrichment information in gobpm file format.
     '''
@@ -100,7 +105,7 @@ def write_bpm(out, bpmi, modi, genes, goterms):
     for accession in sortgo(goterms):
         goterm = goterms[accession]
 
-        if conf.hide_enriched_genes:
+        if conf is not None and conf.hide_enriched_genes:
             egenes = ''
         else:
             egenes = '\t%s' % ' '.join(goterm['genes'])
