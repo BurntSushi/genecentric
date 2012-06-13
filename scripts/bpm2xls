@@ -1,0 +1,69 @@
+#!/usr/bin/env python2.7
+
+import argparse
+import csv
+import os.path
+import re
+
+import xlwt
+
+from excel.WriteExcel import WriteExcel
+
+parser = argparse.ArgumentParser(
+    description='Convert a BPM file to an XLS file.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('bpm', type=str, metavar='BPM_FILE')
+aa('xls', type=str, metavar='XLS_FILE')
+aa('-d', '--delimiter', type=str, metavar='CSV_DELIMITER', default='\t')
+aa('-w', '--column-width', type=int, metavar='COLUMN_WIDTH', default=None)
+aa('-p', '--plus-color', type=str,
+   metavar='MARK_PLUS_BGCOLOR', default='orange',
+   help='The background color of cells for genes surround by "+" signs.')
+aa('-s', '--star-color', type=str,
+   metavar='MARK_STAR_BGCOLOR', default='yellow',
+   help='The background color of cells for genes surround by "*" signs.')
+
+conf = parser.parse_args()
+
+reader = csv.reader(open(conf.bpm), delimiter=conf.delimiter)
+wb = WriteExcel(conf.xls)
+sheet_name = os.path.basename(conf.bpm)
+sheet_name = re.sub('\.[^.]+$', '', sheet_name)
+if len(sheet_name) > 31:
+    sheet_name = sheet_name[:31]
+wb.write_sheet(sheet_name, [])
+
+pstyle = xlwt.easyxf('''
+    alignment: wrap True, vertical top;
+    pattern: pattern solid, fore_color %s
+''' % conf.plus_color)
+sstyle = xlwt.easyxf('''
+    alignment: wrap True, vertical top;
+    pattern: pattern solid, fore_color %s
+''' % conf.star_color)
+
+r = 0
+for row1 in reader:
+    row2 = reader.next()
+    for row in (row1, row2):
+        numcols = len(row)
+        for c, cell in enumerate(row):
+            if cell and cell[0] == '+' and cell[-1] == '+':
+                wb.write(sheet_name, r, c, cell[1:-1], style=pstyle)
+            elif cell and cell[0] == '*' and cell[-1] == '*':
+                wb.write(sheet_name, r, c, cell[1:-1], style=sstyle)
+            else:
+                wb.write(sheet_name, r, c, cell)
+        r += 1
+    r += 1
+
+if conf.column_width:
+    for c in xrange(numcols):
+        wb.set_width(sheet_name, c, conf.column_width)
+
+# Always fit bpm/module names.
+wb.set_width(sheet_name, 0, 17)
+
+wb.save()
+

@@ -1,0 +1,61 @@
+#!/usr/bin/env python2
+
+import argparse
+from collections import defaultdict
+import csv
+
+import geneids
+
+import bpm.bpmreader
+
+parser = argparse.ArgumentParser(
+    description='Convert orthologous yeast to human gene mapping to nice CSV.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('orthologs', type=str,
+   metavar='INPUT_YEAST_HUMAN_ORTHOLOGS',
+   help='Location of the orthologous mapping from EMAP genes to human genes.')
+aa('csv', type=str,
+   metavar='CSV_OUTPUT_FILE',
+   help='Location of the CSV output file.')
+aa('--nice', action='store_true',
+   help='When set, nice gene names will be used whenever possible.')
+aa('-m', '--map-type', choices=['human-to-yeast', 'yeast-to-human'],
+   default='human-to-yeast', metavar='MAP_DISPLAY_TYPE',
+   help='The map type determines how to show the mapping. If '
+        'this is set to \'human-to-yeast\', then human genes will be in the '
+        'left most column will all corresponding yeast genes in subsequent '
+        'columns. The opposite is true when this is set to '
+        '\'yeast-to-human\'.')
+conf = parser.parse_args()
+
+# Construct mapping from yeast to human and human to yeast.
+# Use the nice names if available when config.nice is true.
+human_to_yeast, yeast_to_human = defaultdict(set), defaultdict(set)
+for row in csv.reader(open(conf.orthologs), delimiter='\t'):
+    ynice, ysystematic = row[0].split(':$:')
+    ygene = ysystematic
+    if conf.nice and ynice:
+        ygene = ynice
+
+    for hgene in row[1:]:
+        hnice, hsystematic = hgene.split(':$:')
+        hgene = hsystematic
+        if conf.nice and hnice:
+            hgene = hnice
+
+        human_to_yeast[hgene].add(ygene)
+        yeast_to_human[ygene].add(hgene)
+
+# Now determine which mapping to use.
+out = open(conf.csv, 'w+')
+if conf.map_type == 'yeast-to-human':
+    mapping = yeast_to_human
+    print >> out, 'Yeast gene\tHuman genes'
+else:
+    mapping = human_to_yeast
+    print >> out, 'Human gene\tYeast genes'
+
+for mapfrom, maptos in mapping.iteritems():
+    print >> out, '%s\t%s' % (mapfrom, '\t'.join(maptos))
+
