@@ -1,13 +1,23 @@
 #!/usr/bin/env python2.7
 
-# Either takes a list of CSV bpm formatted files or a single CSV bpm
-# formatted file in stdin and translates 'Y...' yeast gene names to 
-# the more recognizable product names.
-
+import argparse
 import csv
-import sys
 
 import geneids
+
+parser = argparse.ArgumentParser(
+    description='Translate a BPM file with systematic yeast gene names to '
+                'standard yeast gene names.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('bpm', type=str,
+   metavar='INPUT_BPM_FILE',
+   help='BPM file to translate.')
+aa('obpm', type=str,
+   metavar='OUTPUT_BPM_FILE',
+   help='The name of the file to write the input BPM file with the gene names '
+        'translated.')
+conf = parser.parse_args()
 
 def translate_csv(i, o):
     ids = csv.reader(i, delimiter='\t')
@@ -16,14 +26,5 @@ def translate_csv(i, o):
     for row in ids:
         locuses.writerow([row[0]] + map(geneids.locus_to_product, row[1:]))
 
-if len(sys.argv) > 1:
-    for f in sys.argv[1:]:
-        if f[-3:] != 'csv':
-            continue
-
-        i = open(f)
-        o = open('nice-%s' % f, 'w+')
-        translate_csv(i, o)
-else:
-    translate_csv(sys.stdin, sys.stdout)
+translate_csv(open(conf.bpm), open(conf.obpm, 'w+'))
 

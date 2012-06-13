@@ -1,0 +1,32 @@
+#!/usr/bin/env python2.7
+
+import argparse
+
+import geneids
+
+from bpm.enrichment import read_bpm, write_bpm
+
+parser = argparse.ArgumentParser(
+    description='Translate a GoBPM file with systematic yeast gene names to '
+                'standard yeast gene names.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+aa = parser.add_argument
+aa('gobpm', type=str,
+   metavar='INPUT_GOBPM_FILE',
+   help='GoBPM file to translate.')
+aa('ogobpm', type=str,
+   metavar='OUTPUT_GOBPM_FILE',
+   help='The name of the file to write the input GoBPM file with the gene '
+        'names translated.')
+conf = parser.parse_args()
+
+out = open(conf.ogobpm, 'w+')
+for bpmtext in open(conf.gobpm).read().split('>'):
+    if not bpmtext.strip():
+        continue
+    bpmi, modi, genes, terms = read_bpm(bpmtext)
+    genes = map(geneids.locus_to_product, genes)
+    for acc in terms:
+        terms[acc]['genes'] = map(geneids.locus_to_product, terms[acc]['genes'])
+    print >> out, write_bpm(bpmi, modi, genes, terms)
+
