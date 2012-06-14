@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 
 import argparse
+import itertools
 
 from bpm import bpmreader, geneinter
 
@@ -19,6 +20,7 @@ aa('-e', '--essential-list', dest='essentials', type=str, default=None,
    help='The location of an essential gene list file. (One gene per line.) '
         'Any genes in this file will be excluded from the set of genes used '
         'to generate BPMs.')
+aa('-w', '--within', action='store_true')
 conf = parser.parse_args()
 
 geneinter.load_genes(conf.geneinter, conf.essentials)
@@ -26,9 +28,21 @@ geneinter.load_genes(conf.geneinter, conf.essentials)
 # Read the BPMs
 bpms = bpmreader.read(conf.bpm)
 
-# Now add the edges.
-for i1, g1 in enumerate(bpms[conf.bpmi][0]):
-    for i2, g2 in enumerate(bpms[conf.bpmi][1]):
+if not conf.within:
+    # Print the interaction scores between modules.
+    for g1 in bpms[conf.bpmi][0]:
+        for g2 in bpms[conf.bpmi][1]:
+            gi = geneinter.gi(g1, g2)
+            print geneids.locus_to_product(g1), geneids.locus_to_product(g2), gi
+else:
+    # Print the interaction scores within each module
+    print 'Module0'
+    for g1, g2 in itertools.combinations(bpms[conf.bpmi][0], 2):
+        gi = geneinter.gi(g1, g2)
+        print geneids.locus_to_product(g1), geneids.locus_to_product(g2), gi
+    print '-' * 45
+    print 'Module1'
+    for g1, g2 in itertools.combinations(bpms[conf.bpmi][1], 2):
         gi = geneinter.gi(g1, g2)
         print geneids.locus_to_product(g1), geneids.locus_to_product(g2), gi
 
