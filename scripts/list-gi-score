@@ -23,7 +23,7 @@ aa('-e', '--essential-list', dest='essentials', type=str, default=None,
 aa('-w', '--within', action='store_true')
 conf = parser.parse_args()
 
-geneinter.load_genes(conf.geneinter, conf.essentials)
+geneinter.load_genes(conf.geneinter, conf.essentials, False)
 
 # Read the BPMs
 bpms = bpmreader.read(conf.bpm)
