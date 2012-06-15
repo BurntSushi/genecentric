@@ -17,7 +17,7 @@ def enrich(modulecnt, (bpmi, modi, genes)):
                                 in the module.
     :return: A four-tuple of the input module and its associated go terms.
     '''
-    goterms = faread.functionate(genes, modulecnt)
+    goterms = faread.functionate(genes, min(10000, max(1000, modulecnt)))
 
     parallel.inc_counter()
     parallel.print_progress()
