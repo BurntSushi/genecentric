@@ -24,7 +24,7 @@ setup(
     name = 'genecentric',
     author = 'Andrew Gallant',
     author_email = 'Andrew.Gallant@tufts.edu',
-    version = '1.0.1',
+    version = '1.0.2',
     license = 'GPL',
     description = 'A utility to generate between-pathway modules (BPMs) and perform GO enrichment on them.',
     long_description = 'See README',

@@ -1,6 +1,6 @@
 <?php
 
-$currentFile = "genecentric-1.0.1";
+$currentFile = "genecentric-1.0.2";
 
 ?><!doctype html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
