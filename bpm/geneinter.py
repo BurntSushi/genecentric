@@ -92,6 +92,9 @@ def gi(g1, g2):
     '''
     This indexing used to be a bit more complex, but the dict should contain
     both (g1, g2) and (g2, g1). It uses more memory but speeds up execution.
+
+    Note that gis is a defaultdict of floats. So that if a particular gene pair
+    is absent, 0.0 will be returned.
     '''
     return gis[(g1, g2)]
 
