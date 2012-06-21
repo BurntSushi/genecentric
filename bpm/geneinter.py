@@ -19,7 +19,7 @@ def load_genes(geneinter_file='', essentials_file='', squaring=True):
     There is some criteria for excluding genes from this process:
       1) If an essential gene list file is provided, any gene in that file
          is excluded from the set of genes used.
-      2) If an interaction score is missing or zero, it is *KEPT* in the set of
+      2) If an interaction score is zero, it is *KEPT* in the set of
          genes used to generate BPMs with an interaction score of 0.
 
     This gene information is then available at the 'geneint' module level, 

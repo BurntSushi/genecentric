@@ -439,8 +439,10 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
 <p>A genetic interaction file is tab-delimited and made up of three columns:
    two gene identifiers and a genetic interaction score. There should be a line
    for every pair of genes with an interaction score.</p>
-<p>If an interaction score is missing, it is assumed to be 0.0. Similarly if
-   a particular gene pair is missing.</p>
+<p>Note that an interaction score must always be present in the third column.
+   If the source data omits an interaction, use 0.0 as the genetic interaction
+   score in the third column. (You may also omit the gene pair entirely, in
+   which case, its interaction is considered to be zero.)</p>
 <p>There should be no column headers in genetic interaction data files.</p>
 <p>Please see the <?=$gc_emap?> command for more information how to transform 
    data into a <strong>gi</strong> file.</p>
