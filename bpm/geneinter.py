@@ -4,7 +4,7 @@
 from collections import defaultdict
 import csv
 
-from bpm import conf, parallel
+from bpm import conf, gzipOpen, parallel
 
 gis = defaultdict(float)
 genes = set()
@@ -31,17 +31,18 @@ def load_genes(geneinter_file='', essentials_file='', squaring=True):
     Basically, we force the dictionary to be a reflexive matrix.
     '''
     essentials = set()
-    if conf is not None and conf.essentials:
-        for line in open(conf.essentials):
-            essentials.add(line.strip())
-    else:
-        for line in open(essentials_file):
-            essentials.add(line.strip())
+    if conf.essentials:
+        if conf is not None:
+            for line in gzipOpen(conf.essentials):
+                essentials.add(line.strip())
+        else:
+            for line in gzipOpen(essentials_file):
+                essentials.add(line.strip())
 
     if conf is not None:
-        reader = csv.reader(open(conf.geneinter), delimiter='\t')
+        reader = csv.reader(gzipOpen(conf.geneinter), delimiter='\t')
     else:
-        reader = csv.reader(open(geneinter_file), delimiter='\t')
+        reader = csv.reader(gzipOpen(geneinter_file), delimiter='\t')
     for row in reader:
         g1, g2, intscore = row[0], row[1], row[2]
 

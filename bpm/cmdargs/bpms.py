@@ -70,7 +70,7 @@ if conf.processes > __cpus:
 
 # Do some error checking on file inputs...
 assert_read_access(conf.geneinter)
-if conf.essentials > 0: # essentials list is optional
+if conf.essentials: # essentials list is optional
     assert_read_access(conf.essentials)
 
 # Set the global conf variable
