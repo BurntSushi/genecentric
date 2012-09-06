@@ -25,7 +25,7 @@ require_once('includes/command_writer.php');
    <a href="files/data/essentials">essentials</a> from us.</p>
 
 <p>If you'd like to use other data with Genecentric, please see our
-   <a href="doc.php#genecentric-from-emap">documentation</a> for instruction on 
+   <a href="doc.php#genecentric-from-csv">documentation</a> for instruction on 
    how to convert existing data to data that can be read by Genecentric.</p>
 
 <h4 id="typical">A typical example</h4>
@@ -104,17 +104,17 @@ require_once('includes/command_writer.php');
 <p>If you have an E-MAP data file but would like to convert it to a genetic
    interaction data file (which is the only format of input that Genecentric
    supports), you can use a program provided by the Genecentric package called
-   <?=code('genecentric-from-emap')?>. It takes as input an E-MAP file and
+   <?=code('genecentric-from-csv')?>. It takes as input an E-MAP file and
    outputs a <?=gi('')?> file that can be read by Genecentric.</p>
-<?=cmd('genecentric-from-emap chrombio.csv ' . gi('yeast_emap'))?>
-<p>You can view more options using <?=code('genecentric-from-emap --help')?>.
+<?=cmd('genecentric-from-csv chrombio.csv ' . gi('yeast_emap'))?>
+<p>You can view more options using <?=code('genecentric-from-csv --help')?>.
    The options allow you to specify the format of the E-MAP file; particularly
    which columns have the gene identifier information and which column
    has the genetic interaction score.</p>
-<p>There is more information about <?=code('genecentric-from-emap')?> and some
+<p>There is more information about <?=code('genecentric-from-csv')?> and some
    advice on what to do if you have other kinds of data in the
-   <a href="doc.php#genecentric-from-emap">documentation for 
-   <?=code('genecentric-from-emap')?></a>.</p>
+   <a href="doc.php#genecentric-from-csv">documentation for 
+   <?=code('genecentric-from-csv')?></a>.</p>
 
 <?php require_once('includes/footer.php'); ?>
 

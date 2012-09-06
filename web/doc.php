@@ -3,12 +3,12 @@ require_once('includes/header.php');
 require_once('includes/command_writer.php');
 
 // $gc_bpms = '<a href="#genecentric-bpms">' . code('genecentric-bpms') . '</a>'; 
-// $gc_emap = '<a href="#genecentric-from-emap">' . code('genecentric-from-emap') . '</a>'; 
+// $gc_emap = '<a href="#genecentric-from-csv">' . code('genecentric-from-csv') . '</a>'; 
 // $gc_go = '<a href="#genecentric-go">' . code('genecentric-go') . '</a>'; 
 // $gc_fa = '<a href="#genecentric-fainfo">' . code('genecentric-fainfo') . '</a>'; 
 
 $gc_bpms = '<a href="#genecentric-bpms">genecentric-bpms</a>';
-$gc_emap = '<a href="#genecentric-from-emap">genecentric-from-emap</a>';
+$gc_emap = '<a href="#genecentric-from-csv">genecentric-from-csv</a>';
 $gc_go = '<a href="#genecentric-go">genecentric-go</a>';
 $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
 
@@ -27,7 +27,7 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
   <li><a href="#commands">Commands</a>
     <ul>
       <li><a href="#genecentric-bpms">genecentric-bpms</a></li>
-      <li><a href="#genecentric-from-emap">genecentric-from-emap</a></li>
+      <li><a href="#genecentric-from-csv">genecentric-from-csv</a></li>
       <li><a href="#genecentric-go">genecentric-go</a></li>
       <li><a href="#genecentric-fainfo">genecentric-fainfo</a></li>
     </ul>
@@ -172,9 +172,9 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
   <dd>Not used.</dd>
 </dl>
 
-<h4 id="genecentric-from-emap">genecentric-from-emap</h4>
+<h4 id="genecentric-from-csv">genecentric-from-csv</h4>
 <p><code class="command">
-  usage: genecentric-from-emap [-h] [--delimiter DELIMITER] [--no-header]<br>
+  usage: genecentric-from-csv [-h] [--delimiter DELIMITER] [--no-header]<br>
                              [--g1-name G1_NAME] [--g2-name G2_NAME]<br>
                              [--g1-allele G1_ALLELE] [--g2-allele G2_ALLELE]<br>
                              [--int-score INT_SCORE]<br>
