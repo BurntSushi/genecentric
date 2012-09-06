@@ -31,9 +31,9 @@ aa('bpm', type=str,
    metavar='INPUT_BPM_FILE', help='Location of the BPM file.')
 aa('enrichment', type=str,
    metavar='OUTPUT_ENRICHMENT_FILE', help='Output file for GO enrichment.')
-aa('-e', '--essential-list', dest='essentials', type=str, default=None,
-   metavar='ESSENTIAL_FILE',
-   help='The location of an essential gene list file. (One gene per line.) '
+aa('-e', '--ignore-list', dest='ignore', type=str, default=None,
+   metavar='IGNORE_FILE',
+   help='The location of an ignore gene list file. (One gene per line.) '
         'Any genes in this file will be excluded from the set of genes used '
         'to generate BPMs.')
 aa('-s', '--sort-go-by', dest='sort_go_by', type=str, default='p',
@@ -73,10 +73,10 @@ aa('--fa-cutoff', dest='fa_cutoff', type=float, default=0.05,
    metavar='FA_CUTOFF',
    help='The p-value cutoff for GO enrichment to be used with Funcassociate. '
         'It should be in the interval (0, 1].')
-aa('--fa-genespace', dest='fa_genespace', action='store_true',
-   help='If set, the set of genes from the provided GI file will be sent '
-        'as the genespace to Funcassociate. Otherwise, the default species '
-        'genespace will be used.')
+aa('--fa-species-genespace', dest='fa_species_genespace', action='store_true',
+   help='If set, FuncAssociate will be instructed to use all genes from the '
+        'species in the background genespace. If not set, only the genes in '
+        'the genetic interaction data will be used as the genespace.')
 
 aa('--no-progress', dest='progress', action='store_false',
    help='If set, the progress bar will not be shown.')
@@ -94,8 +94,8 @@ if conf.processes > __cpus:
 # Nice error messages if files don't exist...
 assert_read_access(conf.geneinter)
 assert_read_access(conf.bpm)
-if conf.essentials: # optional file
-    assert_read_access(conf.essentials)
+if conf.ignore: # optional file
+    assert_read_access(conf.ignore)
 
 # We don't care about squaring when doing GO enrichment.
 conf.squaring = False

@@ -53,12 +53,13 @@ require_once('includes/command_writer.php');
    that are either too small or too big.</p>
 
 <h4 id="genespace">Change the genespace used by FuncAssociate</h4>
-<p>By default, Genecentric will tell FuncAssociate to use its default genespace
-   for the target species. In some instances, it may be desirable to specify
-   only the set of genes in the input genetic interaction file as the
-   genespace. This can be accomplished using the <?=code('--fa-genespace')?>
-   option:</p>
-<?=cmd('genecentric-go --fa-genespace '
+<p>By default, Genecentric will tell FuncAssociate to use only the genes
+   in the genetic interaction data as a genespace.
+   In some instances, it may be desirable to specify that the default
+   genespace be used, which consists of all genes in the species recorded
+   by FuncAssociate. This can be accomplished using the
+   <?=code('--fa-species-genespace')?> option:</p>
+<?=cmd('genecentric-go --fa-species-genespace '
        . gi('yeast_emap') . bpm('output') . gobpm('enrichment'))?>
 
 <h4 id="fainfo">Finding available species and namespaces for GO annotation</h4>

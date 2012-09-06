@@ -25,9 +25,9 @@ aa('geneinter', type=str,
    metavar='INPUT_GENETIC_INTERACTION_FILE', help='Location of the GI file.')
 aa('bpm', type=str,
    metavar='OUTPUT_BPM_FILE', help='Where the BPM output will be written.')
-aa('-e', '--essential-list', dest='essentials', type=str, default=None,
-   metavar='ESSENTIAL_FILE',
-   help='The location of an essential gene list file. (One gene per line.) '
+aa('-e', '--ignore-list', dest='ignore', type=str, default=None,
+   metavar='IGNORE_FILE',
+   help='The location of an ignore gene list file. (One gene per line.) '
         'Any genes in this file will be excluded from the set of genes used '
         'to generate BPMs.')
 aa('-c', '--gene-ratio', dest='C', type=float, default=0.90,
@@ -36,8 +36,11 @@ aa('-j', '--jaccard', dest='jaccard', type=float, default=0.66,
    metavar='JACCARD_INDEX', help='Jaccard Index threshold')
 aa('-m', '--num-bipartitions', dest='M', type=int, default=250,
    metavar='NUMBER_BIPARTITIONS', help='Number of bipartitions to generate')
-aa('--no-squaring', dest='squaring', action='store_false',
-   help='If set, genetic interaction scores will not be squared. '
+aa('--emap', dest='emap_defaults', action='store_true',
+   help='If set, EMAP default parameters will be used. This overrides all '
+        'other parameters.')
+aa('--squaring', dest='squaring', action='store_true',
+   help='If set, genetic interaction scores will be squared. '
         'Squaring typically speeds convergence.')
 aa('--minimum-size', dest='min_size', type=int, default=3,
    metavar='MIN_SIZE', 
@@ -62,6 +65,16 @@ aa('-v', '--verbose', dest='verbose', action='store_true',
 
 conf = parser.parse_args()
 
+# BS
+if conf.emap_defaults:
+    conf.C = 0.9
+    conf.jaccard = 0.66
+    conf.M = 250
+    conf.squaring = True
+    conf.min_size = 3
+    conf.max_size = 25
+    conf.pruning = True
+
 # Protect the user from themselves.
 # If the provided number of processes is larger than the detected number of
 # CPUs, forcefully lower it to the number of CPUs.
@@ -70,8 +83,8 @@ if conf.processes > __cpus:
 
 # Do some error checking on file inputs...
 assert_read_access(conf.geneinter)
-if conf.essentials: # essentials list is optional
-    assert_read_access(conf.essentials)
+if conf.ignore: # ignore list is optional
+    assert_read_access(conf.ignore)
 
 # Set the global conf variable
 bpm.conf = conf

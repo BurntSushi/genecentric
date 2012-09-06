@@ -19,10 +19,10 @@ def functionate(genes, modulecnt):
                       corresponds to the 'reps' (reptitions) Funcassociate
                       parameter.
     '''
-    if conf.fa_genespace:
-        genespace = list(geneinter.genespace)
-    else:
+    if conf.fa_species_genespace:
         genespace = None
+    else:
+        genespace = list(geneinter.genespace)
 
     c = faclient.FuncassociateClient()
     response = c.functionate(query=genes, 

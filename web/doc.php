@@ -58,7 +58,8 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
 
 <h4 id="genecentric-bpms">genecentric-bpms</h4>
 <p><code class="command">
-  usage: genecentric-bpms [-h] [-e ESSENTIAL_FILE] [-c RATIO] [-j JACCARD_INDEX]<br>
+  usage: genecentric-bpms [-h] [-e IGNORE_FILE] [-c RATIO]
+                        [-j JACCARD_INDEX]<br>
                         [-m NUMBER_BIPARTITIONS] [--no-squaring]<br>
                         [--minimum-size MIN_SIZE] [--maximum-size MAX_SIZE]<br>
                         [-p PROCESSES] [--no-jaccard] [--no-progress] [-v]<br>
@@ -90,15 +91,13 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
   <dd>A required parameter. It specifies the file that <?=$gc_bpms?> will
       write the BPM data to.</dd>
 
-  <dt><?=code('-e ESSENTIAL_FILE, --essential-list ESSENTIAL_FILE')?></dt>
-  <dd><strong>ESSENTIAL_FILE</strong> is the location of a file that contains
+  <dt><?=code('-e IGNORE_FILE, --ignore-list IGNORE_FILE')?></dt>
+  <dd><strong>IGNORE_FILE</strong> is the location of a file that contains
       a list of genes that will <strong>not</strong> be used in any
       computation. It is imperative that you specify the same value for
-      <strong>ESSENTIAL_FILE</strong> for both the <?=$gc_bpms?> and
-      <?=$gc_go?> command, particularly if you're using the
-      <?=code('--fa-genespace')?> option in the <?=$gc_go?> command. The format 
-      of <strong>ESSENTIAL_FILE</strong> is simple: one gene identifier per 
-      line.</dd>
+      <strong>IGNORE_FILE</strong> for both the <?=$gc_bpms?> and
+      <?=$gc_go?> command. The format of <strong>IGNORE_FILE</strong> is 
+      simple: one gene identifier per line.</dd>
 
   <dt><?=code('-c RATIO, --gene-ratio RATIO')?></dt>
   <dd><strong>RATIO</strong> corresponds to the percentage of bipartitions
@@ -260,10 +259,11 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
 
 <h4 id="genecentric-go">genecentric-go</h4>
 <p><code class="command">
-  usage: genecentric-go [-h] [-e ESSENTIAL_FILE] [-s GO_SORT] [-t GO_ORDER]<br>
+  usage: genecentric-go [-h] [-e IGNORE_FILE] [-s GO_SORT] [-t GO_ORDER]<br>
                       [-p PROCESSES] [--hide-enriched-genes]<br>
                       [--fa-species FA_SPECIES] [--fa-namespace FA_NAMESPACE]<br>
-                      [--fa-cutoff FA_CUTOFF] [--fa-genespace] [--no-progress]<br>
+                      [--fa-cutoff FA_CUTOFF] [--fa-species-genespace]
+                      [--no-progress]<br>
                       [-v]<br>
                       INPUT_GENETIC_INTERACTION_FILE INPUT_BPM_FILE<br>
                       OUTPUT_ENRICHMENT_FILE
@@ -299,15 +299,13 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
   <dd>A required parameter. It specifies the file that <?=$gc_go?> will write 
       the GO BPM data to.</dd>
 
-  <dt><?=code('-e ESSENTIAL_FILE, --essential-list ESSENTIAL_FILE')?></dt>
-  <dd><strong>ESSENTIAL_FILE</strong> is the location of a file that contains
+  <dt><?=code('-e IGNORE_FILE, --ignore-list IGNORE_FILE')?></dt>
+  <dd><strong>IGNORE_FILE</strong> is the location of a file that contains
       a list of genes that will <strong>not</strong> be used in any
       computation. It is imperative that you specify the same value for
-      <strong>ESSENTIAL_FILE</strong> for both the <?=$gc_bpms?> and
-      <?=$gc_go?> command, particularly if you're using the
-      <?=code('--fa-genespace')?> option described below. The format of 
-      <strong>ESSENTIAL_FILE</strong> is simple: one gene identifier per 
-      line.</dd>
+      <strong>IGNORE_FILE</strong> for both the <?=$gc_bpms?> and
+      <?=$gc_go?> command. The format of <strong>IGNORE_FILE</strong> is 
+      simple: one gene identifier per line.</dd>
 
   <dt><?=code('-s GO_SORT, --sort-go-by GO_SORT')?></dt>
   <dd>This option controls the order in which GO annotations are sorted for
@@ -369,12 +367,11 @@ $gc_fa = '<a href="#genecentric-fainfo">genecentric-fainfo</a>';
       or equal to this cutoff will be returned by FuncAssociate. By default,
       <strong>FA_CUTOFF</strong> is set to <strong>0.05</strong>.</dd>
 
-  <dt><?=code('--fa-genespace')?></dt>
-  <dd>When set, the genespace sent to FuncAssociate will be equivalent to
-      the set of genes found in the
-      <a href="#file-gi">genetic interaction data</a> file. When not set,
-      the genespace used will be the FuncAssociate default: all genes
-      in the GO associations file for the species used.</dd>
+  <dt><?=code('--fa-species-genespace')?></dt>
+  <dd>When set, FuncAssociate will set the genespace to all genes in the
+      species. If not set, the genespace sent to FuncAssociate will be 
+      equivalent to the set of genes found in the
+      <a href="#file-gi">genetic interaction data</a> file.</dd>
 
   <dt><?=code('--no-progress')?></dt>
   <dd>When set, the progress bar is not shown.</dd>

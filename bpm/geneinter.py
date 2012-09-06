@@ -11,13 +11,13 @@ genes = set()
 genespace = set() # slightly bigger---include all EMAP genes
 numgenes = 0
 
-def load_genes(geneinter_file='', essentials_file='', squaring=True):
+def load_genes(geneinter_file='', ignore_file='', squaring=True):
     '''
     Loads all of the gene pairs and their corresponding interaction scores
     into memory. It also keeps a set of all genes for iterative purposes.
 
     There is some criteria for excluding genes from this process:
-      1) If an essential gene list file is provided, any gene in that file
+      1) If an ignore gene list file is provided, any gene in that file
          is excluded from the set of genes used.
       2) If an interaction score is zero, it is *KEPT* in the set of
          genes used to generate BPMs with an interaction score of 0.
@@ -30,14 +30,14 @@ def load_genes(geneinter_file='', essentials_file='', squaring=True):
     memory usage but saves cpu cycles when looking up interaction scores.
     Basically, we force the dictionary to be a reflexive matrix.
     '''
-    essentials = set()
-    if conf.essentials:
+    ignore = set()
+    if conf.ignore:
         if conf is not None:
-            for line in gzipOpen(conf.essentials):
-                essentials.add(line.strip())
+            for line in gzipOpen(conf.ignore):
+                ignore.add(line.strip())
         else:
-            for line in gzipOpen(essentials_file):
-                essentials.add(line.strip())
+            for line in gzipOpen(ignore_file):
+                ignore.add(line.strip())
 
     if conf is not None:
         reader = csv.reader(gzipOpen(conf.geneinter), delimiter='\t')
@@ -49,8 +49,8 @@ def load_genes(geneinter_file='', essentials_file='', squaring=True):
         genespace.add(g1)
         genespace.add(g2)
 
-        # Ignore pairs where one or both genes are in the essential gene list
-        if g1 in essentials or g2 in essentials:
+        # Ignore pairs where one or both genes are in the ignore gene list
+        if g1 in ignore or g2 in ignore:
             continue
 
         # If there is no interaction score, force it to be 0

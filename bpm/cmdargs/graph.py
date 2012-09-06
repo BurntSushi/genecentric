@@ -17,9 +17,9 @@ aa('bpm', type=str,
    metavar='INPUT_BPM_FILE', help='Location of the BPM file to graph.')
 aa('output_dir', type=str,
    metavar='OUTPUT_DIRECTORY', help='Where the graph files will be written.')
-aa('-e', '--essential-list', dest='essentials', type=str, default=None,
-   metavar='ESSENTIAL_FILE',
-   help='The location of an essential gene list file. (One gene per line.) '
+aa('-e', '--ignore-list', dest='ignore', type=str, default=None,
+   metavar='IGNORE_FILE',
+   help='The location of an ignore gene list file. (One gene per line.) '
         'Any genes in this file will be excluded from the set of genes used '
         'to generate BPMs.')
 aa('--no-squaring', dest='squaring', action='store_false',
