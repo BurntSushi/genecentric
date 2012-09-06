@@ -7,7 +7,7 @@
    our <a href="https://github.com/BurntSushi/genecentric">github
    repository</a>.</p>
 
-<h4>Version 1.0.2</h4>
+<h4>Version 1.0.3</h4>
 
 <ul>
   <li><a href="download_linux.php">Download for Linux/Mac</a></li>
