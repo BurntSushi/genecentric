@@ -45,10 +45,10 @@ require_once('includes/command_writer.php');
    of BPMs produced will equal the number of unique genes in the genetic
    interaction data.</p>
 <?=cmd('genecentric-bpms -e essentials ' .
-       '--no-jaccard --minimum-size 0 --maximum-size 0 ' .
+       '--no-jaccard --minimum-size 1 --maximum-size 0 ' .
        gi('yeast_emap') . bpm('notpruned'))?>
 <p>The <?=code('--no-jaccard')?> option is used to disable Jaccard-style 
-   pruning, and the <?=code('--minimum-size 0')?> and
+   pruning, and the <?=code('--minimum-size 1')?> and
    <?=code('--maximum-size 0')?> options are used to prevent pruning of BPMs 
    that are either too small or too big.</p>
 
