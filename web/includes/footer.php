@@ -9,9 +9,9 @@
          of Compensation from E-MAP and SGA Data Using Local Search Algorithms 
          for Max Cut," Recomb 2011, pp. 154-167.</p>
       <p><strong>and</strong></p>
-      <p>Gallant, Leiserson, Cowen and Hescott, "Genecentric: A package to
-         uncover graph-theoretic structure in high-throughput epistasis data."
-         Submitted for publication.</p>
+      <p>Gallant, Leiserson, Kackalov, Cowen and Hescott, "Genecentric: A 
+         package to uncover graph-theoretic structure in high-throughput 
+         epistasis data." BMC Bioinformatics in press, 2013.</p>
     </div>
   </footer>
   </div></div>
