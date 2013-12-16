@@ -169,8 +169,9 @@ examples = {
 if conf.command == 'species':
     print '\n'.join(sorted(fc.available_species()))
 elif conf.command == 'namespaces': # cmdargs errors if conf.species is absent
-    withExs = map(lambda n: '%s (ex: "%s")' % (n, examples[(conf.species, n)]),
-                  sorted(fc.available_namespaces(conf.species)))
+    withEx = lambda n: '%s (ex: "%s")' \
+                       % (n, examples.get((conf.species, n), 'N/A'))
+    withExs = map(withEx, sorted(fc.available_namespaces(conf.species)))
     print '\n'.join(withExs)
 else: # argparse should catch us before we get here
     print >> sys.stderr, 'Invalid command %s.' % conf.command
